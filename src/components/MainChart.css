@@ -1,0 +1,29 @@
+.main-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+}
+
+.chart-row {
+  flex: 1;
+  min-height: 300px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .main-chart {
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  .chart-row {
+    min-height: 250px;
+  }
+}
