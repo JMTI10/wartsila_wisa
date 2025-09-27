@@ -14,6 +14,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "docker:build": "docker build -t wartsila-wisa .",
+    "docker:run": "docker run -p 3000:80 wartsila-wisa",
+    "docker:dev": "docker-compose up react-dev",
+    "docker:prod": "docker-compose up react-app",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "build": "react-scripts build",

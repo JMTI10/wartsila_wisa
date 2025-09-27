@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  react-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    container_name: wartsila-wisa-app
+    restart: unless-stopped
+
+  # Development version with hot reload
+  react-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3001:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    container_name: wartsila-wisa-dev
+    environment:
+      - CHOKIDAR_USEPOLLING=true
