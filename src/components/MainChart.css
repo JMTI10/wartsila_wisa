@@ -5,11 +5,12 @@
   flex-direction: column;
 }
 
-/* HEADER WITH BLUE BACKGROUND */
+/* Header with blue background */
 .main-chart-header {
   padding: 25px 30px 20px 30px;
+  background: var(--wartsila-blue);
   background: linear-gradient(135deg, var(--wartsila-blue) 0%, #0066cc 100%);
-  color: white;
+  color: var(--wartsila-white);
   border-bottom: 1px solid var(--border-light);
 }
 
@@ -41,7 +42,7 @@
   color: var(--wartsila-white);
 }
 
-/* CHARTS SECTION */
+/* Charts section */
 .charts-section {
   padding: 30px;
   background: var(--wartsila-white);
@@ -63,13 +64,13 @@
   transform: translateY(-2px);
 }
 
-/* DATA DISPLAY SECTION */
+/* Data display section */
 .data-display-section {
   flex: 1;
   background: var(--wartsila-white);
 }
 
-/* RESPONSIVE */
+/* Responsive design */
 @media (max-width: 768px) {
   .main-chart-header {
     padding: 20px 20px 15px 20px;

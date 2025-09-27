@@ -2,27 +2,22 @@
   text-align: left;
 }
 
-/* CRITICAL: Ensure main-layout uses flexbox correctly */
 .main-layout {
   display: flex;
   min-height: 100vh;
   width: 100%;
 }
 
-/* Main content area (left side) */
 .main-layout > :first-child {
   flex: 1;
-  min-width: 0; /* Important for flexbox */
+  min-width: 0;
 }
 
-/* Sidebar area (right side) - FIXED WIDTH */
 .main-layout > :last-child {
   width: 380px;
-  flex-shrink: 0; /* Prevent sidebar from shrinking */
-  background: #f8f9fa; /* Visual indicator that sidebar exists */
+  flex-shrink: 0;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .main-layout {
     flex-direction: column;

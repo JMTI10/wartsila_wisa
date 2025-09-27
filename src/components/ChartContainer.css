@@ -13,6 +13,7 @@
 
 .chart-header {
   padding: 20px;
+  background: var(--wartsila-blue);
   background: linear-gradient(135deg, var(--wartsila-blue) 0%, #0066cc 100%);
   border-bottom: 1px solid var(--border-light);
 }
@@ -20,14 +21,13 @@
 .chart-header h3 {
   margin: 0;
   color: var(--wartsila-white);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  text-align: left;
 }
 
 .chart-content {
   padding: 25px;
-  min-height: 220px;
+  min-height: 200px;
   background: var(--wartsila-white);
 }
 
@@ -57,6 +57,7 @@
 
 .graph-bar {
   width: 35px;
+  background: var(--wartsila-orange);
   background: linear-gradient(to top, var(--wartsila-orange) 0%, #ff8c33 100%);
   border-radius: 4px 4px 0 0;
   min-height: 10px;
