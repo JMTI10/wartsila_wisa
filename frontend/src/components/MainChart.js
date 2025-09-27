@@ -2,24 +2,35 @@ import React from 'react';
 import './MainChart.css';
 import ChartContainer from './ChartContainer';
 import DataDisplay from './DataDisplay';
+import { Link } from 'react-router-dom';
 
 const MainChart = () => {
   return (
     <div className="main-chart-component">
-      {/* ONLY HEADER - NO DUPLICATE TITLES */}
+      {/* HEADER WITH ENGINE LINK */}
       <div className="main-chart-header">
-        <div className="header-brand">
-          <h1>Wartsila</h1>
-          <h2>Wisa Analytics</h2>
+        <div className="header-left">
+          <div className="header-brand">
+            <h1>Wartsila</h1>
+            <h2>Wisa Analytics</h2>
+          </div>
+          <p className="header-subtitle">Real-time emissions monitoring and analysis</p>
         </div>
-        <p className="header-subtitle">Real-time emissions monitoring and analysis</p>
+        
+        {/* ENGINE LINK ON THE RIGHT SIDE */}
+        <div className="header-right">
+          <Link to="/engine" className="engine-link">
+            <span className="engine-icon">⚙️</span>
+            <span>Engine</span>
+          </Link>
+        </div>
       </div>
       
-      {/* CHARTS SECTION - SIMPLE TITLES */}
+      {/* CHARTS SECTION */}
       <div className="charts-section">
         <div className="charts-horizontal">
           <ChartContainer 
-            title="Performance Overview"  // CHANGED FROM "Performance Metrics"
+            title="Performance Overview"
             chartId="chart-1"
           />
           <ChartContainer 

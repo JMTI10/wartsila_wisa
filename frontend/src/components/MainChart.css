@@ -6,11 +6,16 @@
 }
 
 .main-chart-header {
-  padding: 20px 30px 1px 30px; /* Reduced padding */
-  background: var(--wartsila-blue);
-  background: linear-gradient(135deg, var(--wartsila-blue) 0%, #0066cc 100%);
-  color: var(--wartsila-white);
-  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20 25px 20px;
+  background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+  color: white;
+  border-bottom: 1px solid #34495e;
+  /* Remove any margin-left or width calculations */
+  margin-left: 0;
+  width: 100%;
 }
 
 .header-brand {
@@ -69,6 +74,38 @@
   background: var(--wartsila-white);
 }
 
+.main-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Change from flex-start to center */
+  padding: 20px;
+  background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+  color: white;
+  border-bottom: 1px solid #34495e;
+}
+
+.header-right .engine-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #e67e22 0%, #f39c12 100%);
+  border-radius: 6px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 13px;
+  height: 36px;
+  box-shadow: 0 2px 10px rgba(230, 126, 34, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.header-right .engine-link:hover {
+  background: linear-gradient(135deg, #d35400 0%, #e67e22 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(230, 126, 34, 0.4);
+}
 /* Responsive design */
 @media (max-width: 768px) {
   .main-chart-header {
@@ -98,4 +135,5 @@
     grid-template-columns: 1fr;
     gap: 20px;
   }
+  
 }
