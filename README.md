@@ -18,10 +18,6 @@ A React-based web application for visualizing and analyzing Wartsila Wisa perfor
 
 Visit the application: [https://jmt110.github.io/wartsila_wisa](https://jmt110.github.io/wartsila_wisa)
 
-## 📸 Screenshot
-
-![Dashboard Preview](https://via.placeholder.com/800x400/282c34/ffffff?text=Wartsila+Wisa+Dashboard)
-
 ## 🛠️ Tech Stack
 
 - **Frontend**: React 18, CSS3, HTML5
