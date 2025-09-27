@@ -3,7 +3,7 @@ import './Sidebar.css';
 
 const Sidebar = () => {
   const [selectedMetrics, setSelectedMetrics] = useState(new Set());
-  const [expandedCategories, setExpandedCategories] = useState(new Set([0, 1, 2, 3])); // Start with all expanded
+  const [expandedCategories, setExpandedCategories] = useState(new Set([0, 1, 2, 3, 4])); // Start with all expanded
 
   const metricCategories = [
     {
@@ -57,6 +57,22 @@ const Sidebar = () => {
         "Grid emission factors - Seasonal",
         "Peak vs off-peak emission factors"
       ]
+    },
+    {
+      title: "Operational Sustainability Metrics",
+      icon: "🌱",
+      metrics: [
+        "Resource Efficiency",
+        "Energy return on energy invested (EROI)",
+        "Fuel utilization efficiency by technology type",
+        "Seasonal efficiency variations",
+        "Load factor optimization",
+        "Environmental Impact Indicators",
+        "Air emissions per unit of useful energy",
+        "Pollutant intensity vs regulatory limits",
+        "Environmental compliance rates",
+        "Avoided emissions from renewable generation"
+      ]
     }
   ];
 
@@ -101,6 +117,14 @@ const Sidebar = () => {
     setSelectedMetrics(new Set());
   };
 
+  const isSubcategoryHeader = (metric) => {
+    const subcategoryHeaders = [
+      "Resource Efficiency",
+      "Environmental Impact Indicators"
+    ];
+    return subcategoryHeaders.includes(metric);
+  };
+
   return (
     <div className="sidebar-component">
       <div className="sidebar-header">
@@ -109,25 +133,25 @@ const Sidebar = () => {
       </div>
       
       <div className="sidebar-controls">
-        <div className="controls-row">
-          <button className="control-btn select-all" onClick={selectAll}>
-            Select All
-          </button>
-          <button className="control-btn clear-all" onClick={clearAll}>
-            Clear All
-          </button>
-          <span className="selected-count">
-            {selectedMetrics.size} metrics selected
-          </span>
-        </div>
-        <div className="controls-row">
+          <div className="controls-row">
+              <button className="control-btn select-all" onClick={selectAll}>
+                Select All
+              </button>
+              <button className="control-btn clear-all" onClick={clearAll}>
+                Clear All
+              </button>
+            <span className="selected-count">
+                {selectedMetrics.size} metrics selected
+            </span>
+          </div>
+      <div className="controls-row">
           <button className="control-btn expand-all" onClick={expandAll}>
             Expand All
           </button>
           <button className="control-btn collapse-all" onClick={collapseAll}>
             Collapse All
           </button>
-        </div>
+      </div>
       </div>
       
       <div className="sidebar-content">
@@ -159,13 +183,16 @@ const Sidebar = () => {
                   {categoryMetrics.map((metric, metricIndex) => (
                     <label 
                       key={metricIndex} 
-                      className={`metric-checkbox ${selectedMetrics.has(metric) ? 'checked' : ''}`}
+                      className={`metric-checkbox ${selectedMetrics.has(metric) ? 'checked' : ''} ${
+                        isSubcategoryHeader(metric) ? 'subcategory-header' : ''
+                      }`}
                     >
                       <input
                         type="checkbox"
                         checked={selectedMetrics.has(metric)}
-                        onChange={() => toggleMetric(metric)}
+                        onChange={() => !isSubcategoryHeader(metric) && toggleMetric(metric)}
                         className="metric-input"
+                        disabled={isSubcategoryHeader(metric)}
                       />
                       <span className="checkmark"></span>
                       <span className="metric-label">{metric}</span>

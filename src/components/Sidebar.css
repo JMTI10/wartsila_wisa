@@ -304,4 +304,67 @@
   .metric-list {
     padding: 10px 20px;
   }
+  .metric-checkbox.subcategory-header {
+    background: linear-gradient(135deg, rgba(0, 84, 160, 0.15) 0%, rgba(255, 107, 0, 0.1) 100%);
+    border-left: 4px solid var(--wartsila-orange);
+    cursor: default;
+  }
+
+  .metric-checkbox.subcategory-header:hover {
+    background: linear-gradient(135deg, rgba(0, 84, 160, 0.2) 0%, rgba(255, 107, 0, 0.15) 100%);
+    border-color: var(--wartsila-orange);
+    transform: none;
+  }
+
+  .metric-checkbox.subcategory-header .metric-label {
+    font-weight: 700;
+    color: var(--wartsila-blue);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .metric-checkbox.subcategory-header .checkmark {
+    visibility: hidden;
+  }
+
+  /* Adjust spacing for better hierarchy */
+  .metric-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px; /* Reduced gap for tighter grouping */
+  }
+
+  .metric-checkbox:not(.subcategory-header) {
+    margin-left: 10px; /* Indent regular metrics */
+    border-left: 2px solid transparent;
+  }
+
+  .metric-checkbox:not(.subcategory-header):hover {
+    border-left-color: var(--border-light);
+  }
+
+  .metric-checkbox.checked:not(.subcategory-header) {
+    border-left-color: var(--wartsila-blue);
+  }
+
+  /* Ensure the sidebar can handle the additional content */
+  .sidebar-component {
+    width: 400px; /* Slightly wider to accommodate longer text */
+  }
+
+  .sidebar-content {
+    height: calc(100vh - 220px);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .sidebar-component {
+      width: 100%;
+    }
+    
+    .metric-checkbox:not(.subcategory-header) {
+      margin-left: 5px;
+    }
+  }
 }

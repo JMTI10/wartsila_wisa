@@ -5,28 +5,43 @@
   flex-direction: column;
 }
 
+/* HEADER WITH BLUE BACKGROUND */
 .main-chart-header {
-  padding: 30px 30px 20px 30px;
-  background: var(--wartsila-white);
-  border-bottom: 2px solid var(--border-light);
-  margin-bottom: 0;
+  padding: 25px 30px 20px 30px;
+  background: linear-gradient(135deg, var(--wartsila-blue) 0%, #0066cc 100%);
+  color: white;
+  border-bottom: 1px solid var(--border-light);
 }
 
-.main-chart-header h1 {
+.header-brand {
+  margin-bottom: 10px;
+}
+
+.header-brand h1 {
   margin: 0;
-  color: var(--wartsila-blue);
-  font-size: 28px;
-  font-weight: 600;
-  text-align: left;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--wartsila-white);
+  letter-spacing: 1px;
 }
 
-.main-chart-header p {
-  margin: 8px 0 0 0;
-  color: var(--text-light);
-  font-size: 16px;
+.header-brand h2 {
+  margin: 0;
+  font-size: 24px;
   font-weight: 400;
+  color: var(--wartsila-white);
+  opacity: 0.9;
 }
 
+.header-subtitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 300;
+  opacity: 0.8;
+  color: var(--wartsila-white);
+}
+
+/* CHARTS SECTION */
 .charts-section {
   padding: 30px;
   background: var(--wartsila-white);
@@ -48,22 +63,29 @@
   transform: translateY(-2px);
 }
 
+/* DATA DISPLAY SECTION */
 .data-display-section {
   flex: 1;
   background: var(--wartsila-white);
 }
 
+/* RESPONSIVE */
 @media (max-width: 768px) {
   .main-chart-header {
     padding: 20px 20px 15px 20px;
   }
   
-  .main-chart-header h1 {
-    font-size: 24px;
+  .header-brand h1 {
+    font-size: 28px;
     text-align: center;
   }
   
-  .main-chart-header p {
+  .header-brand h2 {
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  .header-subtitle {
     text-align: center;
   }
   

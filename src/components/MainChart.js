@@ -6,25 +6,33 @@ import DataDisplay from './DataDisplay';
 const MainChart = () => {
   return (
     <div className="main-chart-component">
+      {/* ONLY HEADER - NO DUPLICATE TITLES */}
       <div className="main-chart-header">
-        <h1>Wartsila Wisa Analytics</h1>
-        <p>Real-time emissions monitoring and analysis</p>
+        <div className="header-brand">
+          <h1>Wartsila</h1>
+          <h2>Wisa Analytics</h2>
+        </div>
+        <p className="header-subtitle">Real-time emissions monitoring and analysis</p>
       </div>
       
-      {/* Top Section: Two small charts side by side */}
-      <div className="charts-horizontal">
-        <ChartContainer 
-          title="Performance Metrics"
-          chartId="chart-1"
-        />
-        <ChartContainer 
-          title="Usage Statistics" 
-          chartId="chart-2"
-        />
+      {/* CHARTS SECTION - SIMPLE TITLES */}
+      <div className="charts-section">
+        <div className="charts-horizontal">
+          <ChartContainer 
+            title="Performance Overview"  // CHANGED FROM "Performance Metrics"
+            chartId="chart-1"
+          />
+          <ChartContainer 
+            title="Usage Statistics" 
+            chartId="chart-2"
+          />
+        </div>
       </div>
       
-      {/* Data Display Section below the charts */}
-      <DataDisplay />
+      {/* DATA DISPLAY BELOW */}
+      <div className="data-display-section">
+        <DataDisplay />
+      </div>
     </div>
   );
 };
