@@ -1,60 +1,34 @@
-/* Keep all existing React styles */
 .App {
-  text-align: center;
+  text-align: left;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  padding: 20px;
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Wartsila Brand Colors */
-:root {
-  --wartsila-blue: #0054a0;
-  --wartsila-orange: #ff6b00;
-  --wartsila-white: #ffffff;
-  --text-dark: #333333;
-  --text-light: #666666;
-  --background-light: #f8fafc;
-  --border-light: #e2e8f0;
-}
-
-/* Main Layout */
+/* CRITICAL: Ensure main-layout uses flexbox correctly */
 .main-layout {
   display: flex;
   min-height: 100vh;
-  background: var(--wartsila-white);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+}
+
+/* Main content area (left side) */
+.main-layout > :first-child {
+  flex: 1;
+  min-width: 0; /* Important for flexbox */
+}
+
+/* Sidebar area (right side) - FIXED WIDTH */
+.main-layout > :last-child {
+  width: 380px;
+  flex-shrink: 0; /* Prevent sidebar from shrinking */
+  background: #f8f9fa; /* Visual indicator that sidebar exists */
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .main-layout {
     flex-direction: column;
+  }
+  
+  .main-layout > :last-child {
+    width: 100%;
   }
 }
