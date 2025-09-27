@@ -1,31 +1,51 @@
 .main-chart-component {
   flex: 1;
-  padding: 20px;
-  background: #ffffff;
+  padding: 30px;
+  background: var(--wartsila-white);
+  background: linear-gradient(135deg, var(--wartsila-white) 0%, var(--background-light) 100%);
 }
 
 .main-chart-header {
   margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--border-light);
 }
 
 .main-chart-header h1 {
   margin: 0;
-  color: #333;
-  font-size: 24px;
+  color: var(--wartsila-blue);
+  font-size: 28px;
+  font-weight: 600;
+  text-align: left;
 }
 
 .charts-horizontal {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 25px;
+}
+
+/* Chart hover effects */
+.charts-horizontal > * {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.charts-horizontal > *:hover {
+  transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {
   .main-chart-component {
-    padding: 15px;
+    padding: 20px;
+  }
+  
+  .main-chart-header h1 {
+    font-size: 24px;
+    text-align: center;
   }
   
   .charts-horizontal {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 }

@@ -33,10 +33,23 @@
   }
 }
 
-/* ADD ONLY LAYOUT STYLES */
+/* Wartsila Brand Colors */
+:root {
+  --wartsila-blue: #0054a0;
+  --wartsila-orange: #ff6b00;
+  --wartsila-white: #ffffff;
+  --text-dark: #333333;
+  --text-light: #666666;
+  --background-light: #f8fafc;
+  --border-light: #e2e8f0;
+}
+
+/* Main Layout */
 .main-layout {
   display: flex;
   min-height: 100vh;
+  background: var(--wartsila-white);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Responsive */

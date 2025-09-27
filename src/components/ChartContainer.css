@@ -1,49 +1,81 @@
 .chart-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border-radius: 8px;
+  background: var(--wartsila-white);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 84, 160, 0.1);
+  transition: all 0.3s ease;
 }
 
-.chart-container.chart-small {
-  height: 100%;
+.chart-container:hover {
+  box-shadow: 0 4px 16px rgba(0, 84, 160, 0.15);
 }
 
 .chart-header {
-  padding: 12px 15px;
-  background: #fff;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--wartsila-blue) 0%, #0066cc 100%);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .chart-header h3 {
   margin: 0;
-  color: #333;
-  font-size: 14px;
+  color: var(--wartsila-white);
+  font-size: 18px;
   font-weight: 600;
+  text-align: left;
 }
 
 .chart-content {
-  flex: 1;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 25px;
+  min-height: 220px;
+  background: var(--wartsila-white);
 }
 
 .chart-placeholder {
   text-align: center;
-  color: #666;
-  width: 100%;
+  color: var(--text-light);
 }
 
 .chart-placeholder p {
-  margin-bottom: 10px;
-  font-size: 12px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  color: var(--wartsila-blue);
+  font-size: 14px;
 }
 
-.placeholder-chart {
-  max-width: 100%;
+.placeholder-graph {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  height: 140px;
+  margin-top: 15px;
+  padding: 10px;
+  background: var(--background-light);
+  border-radius: 8px;
+}
+
+.graph-bar {
+  width: 35px;
+  background: linear-gradient(to top, var(--wartsila-orange) 0%, #ff8c33 100%);
+  border-radius: 4px 4px 0 0;
+  min-height: 10px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.graph-bar:hover {
+  transform: scaleY(1.1);
+  background: linear-gradient(to top, var(--wartsila-orange) 0%, #ff9d4d 100%);
+}
+
+.graph-bar::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--wartsila-blue);
+  border-radius: 2px;
 }
