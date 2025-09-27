@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import MainChart from './components/MainChart';
 import Sidebar from './components/Sidebar'; // MAKE SURE THIS IMPORT EXISTS
-import EngineTest from './components/EngineTest';
 
 function App() {
   return (
@@ -10,7 +9,6 @@ function App() {
       <div className="main-layout">
         <MainChart />
         <Sidebar /> {/* MAKE SURE THIS LINE EXISTS */}
-        <EngineTest></EngineTest>
       </div>
     </div>
   );
