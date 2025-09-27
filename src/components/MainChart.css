@@ -5,9 +5,9 @@
   flex-direction: column;
 }
 
-/* Header with blue background */
+/* COMPACT Header with blue background */
 .main-chart-header {
-  padding: 25px 30px 20px 30px;
+  padding: 20px 30px 15px 30px; /* Reduced padding */
   background: var(--wartsila-blue);
   background: linear-gradient(135deg, var(--wartsila-blue) 0%, #0066cc 100%);
   color: var(--wartsila-white);
@@ -15,12 +15,12 @@
 }
 
 .header-brand {
-  margin-bottom: 10px;
+  margin-bottom: 8px; /* Reduced margin */
 }
 
 .header-brand h1 {
   margin: 0;
-  font-size: 32px;
+  font-size: 26px; /* Smaller font size */
   font-weight: 300;
   color: var(--wartsila-white);
   letter-spacing: 1px;
@@ -28,7 +28,7 @@
 
 .header-brand h2 {
   margin: 0;
-  font-size: 24px;
+  font-size: 20px; /* Smaller font size */
   font-weight: 400;
   color: var(--wartsila-white);
   opacity: 0.9;
@@ -36,7 +36,7 @@
 
 .header-subtitle {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px; /* Smaller font size */
   font-weight: 300;
   opacity: 0.8;
   color: var(--wartsila-white);
@@ -44,7 +44,7 @@
 
 /* Charts section */
 .charts-section {
-  padding: 30px;
+  padding: 25px 30px; /* Slightly reduced padding */
   background: var(--wartsila-white);
   border-bottom: 1px solid var(--border-light);
 }
@@ -73,20 +73,21 @@
 /* Responsive design */
 @media (max-width: 768px) {
   .main-chart-header {
-    padding: 20px 20px 15px 20px;
+    padding: 15px 20px 10px 20px; /* Even more compact on mobile */
   }
   
   .header-brand h1 {
-    font-size: 28px;
+    font-size: 22px;
     text-align: center;
   }
   
   .header-brand h2 {
-    font-size: 20px;
+    font-size: 18px;
     text-align: center;
   }
   
   .header-subtitle {
+    font-size: 13px;
     text-align: center;
   }
   
