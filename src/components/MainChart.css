@@ -5,9 +5,8 @@
   flex-direction: column;
 }
 
-/* COMPACT Header with blue background */
 .main-chart-header {
-  padding: 20px 30px 15px 30px; /* Reduced padding */
+  padding: 20px 30px 1px 30px; /* Reduced padding */
   background: var(--wartsila-blue);
   background: linear-gradient(135deg, var(--wartsila-blue) 0%, #0066cc 100%);
   color: var(--wartsila-white);
