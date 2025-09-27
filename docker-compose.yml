@@ -1,25 +1,97 @@
 version: '3.8'
 
 services:
-  react-app:
+  database-operations:
     build:
-      context: .
+      context: ./database-operations
       dockerfile: Dockerfile
-    ports:
-      - "3000:80"
-    container_name: wartsila-wisa-app
+    container_name: sustainability-operations-db
     restart: unless-stopped
-
-  # Development version with hot reload
-  react-dev:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    ports:
-      - "3001:3000"
+    environment:
+      POSTGRES_DB: sustainability_platform
+      POSTGRES_USER: sustainability_user
+      POSTGRES_PASSWORD: sustainability_pass_2025
     volumes:
-      - .:/app
+      - postgres_operations_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432' # Operations database port
+    networks:
+      - sustainability-network
+
+  database-metrics:
+    build:
+      context: ./database-metrics
+      dockerfile: Dockerfile
+    container_name: sustainability-metrics-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sustainability_metrics
+      POSTGRES_USER: sustainability_metrics_user
+      POSTGRES_PASSWORD: sustainability_metrics_pass_2025
+    volumes:
+      - postgres_metrics_data:/var/lib/postgresql/data
+    ports:
+      - '5433:5432' # Metrics database on different external port
+    networks:
+      - sustainability-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sustainability-backend
+    restart: unless-stopped
+    environment:
+      # Operations Database
+      DB_OPERATIONS_HOST: database-operations
+      DB_OPERATIONS_PORT: 5432
+      POSTGRES_OPERATIONS_DB: sustainability_platform
+      POSTGRES_OPERATIONS_USER: sustainability_user
+      POSTGRES_OPERATIONS_PASSWORD: sustainability_pass_2025
+
+      # Metrics Database
+      DB_METRICS_HOST: database-metrics
+      DB_METRICS_PORT: 5432
+      POSTGRES_METRICS_DB: sustainability_metrics
+      POSTGRES_METRICS_USER: sustainability_metrics_user
+      POSTGRES_METRICS_PASSWORD: sustainability_metrics_pass_2025
+
+      # App Config
+      PORT: 3001
+      NODE_ENV: development
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./backend:/app
       - /app/node_modules
-    container_name: wartsila-wisa-dev
+    networks:
+      - sustainability-network
+    depends_on:
+      - database-operations
+      - database-metrics
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sustainability-frontend
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - sustainability-network
     environment:
       - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+
+volumes:
+  postgres_operations_data:
+  postgres_metrics_data:
+
+networks:
+  sustainability-network:
+    driver: bridge
