@@ -27,3 +27,18 @@ Visit the application: [https://jmt110.github.io/wartsila_wisa](https://jmt110.g
 - **Version Control**: Git
 
 ## 📁 Project Structure
+
+# Wartsila Wisa Analytics Dashboard
+
+A React-based web application for visualizing and analyzing Wartsila Wisa performance metrics and usage statistics.
+
+## 🌟 Live Demo
+
+Scan the QR code below to access the live application:
+
+![QR Code](https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://jmt110.github.io/wartsila_wisa)
+
+**Live URL:** [https://jmt110.github.io/wartsila_wisa](https://jmt110.github.io/wartsila_wisa)
+
+## 🚀 Features
+<!-- rest of your existing content -->
