@@ -5,10 +5,15 @@
   background: white;
   border-radius: 8px;
   overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+.chart-container.chart-small {
+  height: 100%;
 }
 
 .chart-header {
-  padding: 15px 20px;
+  padding: 12px 15px;
   background: #fff;
   border-bottom: 1px solid #e0e0e0;
 }
@@ -16,13 +21,13 @@
 .chart-header h3 {
   margin: 0;
   color: #333;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
 }
 
 .chart-content {
   flex: 1;
-  padding: 20px;
+  padding: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,11 +36,12 @@
 .chart-placeholder {
   text-align: center;
   color: #666;
+  width: 100%;
 }
 
 .chart-placeholder p {
-  margin-bottom: 15px;
-  font-size: 14px;
+  margin-bottom: 10px;
+  font-size: 12px;
 }
 
 .placeholder-chart {

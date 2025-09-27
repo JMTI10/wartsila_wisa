@@ -1,3 +1,4 @@
+/* Keep all existing React styles */
 .App {
   text-align: center;
 }
@@ -15,12 +16,7 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 20px;
   color: white;
 }
 
@@ -34,5 +30,18 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* ADD ONLY LAYOUT STYLES */
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-layout {
+    flex-direction: column;
   }
 }
