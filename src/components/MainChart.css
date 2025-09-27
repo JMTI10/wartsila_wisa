@@ -1,14 +1,15 @@
 .main-chart-component {
   flex: 1;
-  padding: 30px;
-  background: var(--wartsila-white);
-  background: linear-gradient(135deg, var(--wartsila-white) 0%, var(--background-light) 100%);
+  background: var(--background-light);
+  display: flex;
+  flex-direction: column;
 }
 
 .main-chart-header {
-  margin-bottom: 30px;
-  padding-bottom: 20px;
+  padding: 30px 30px 20px 30px;
+  background: var(--wartsila-white);
   border-bottom: 2px solid var(--border-light);
+  margin-bottom: 0;
 }
 
 .main-chart-header h1 {
@@ -17,6 +18,19 @@
   font-size: 28px;
   font-weight: 600;
   text-align: left;
+}
+
+.main-chart-header p {
+  margin: 8px 0 0 0;
+  color: var(--text-light);
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.charts-section {
+  padding: 30px;
+  background: var(--wartsila-white);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .charts-horizontal {
@@ -34,14 +48,27 @@
   transform: translateY(-2px);
 }
 
+.data-display-section {
+  flex: 1;
+  background: var(--wartsila-white);
+}
+
 @media (max-width: 768px) {
-  .main-chart-component {
-    padding: 20px;
+  .main-chart-header {
+    padding: 20px 20px 15px 20px;
   }
   
   .main-chart-header h1 {
     font-size: 24px;
     text-align: center;
+  }
+  
+  .main-chart-header p {
+    text-align: center;
+  }
+  
+  .charts-section {
+    padding: 20px;
   }
   
   .charts-horizontal {
