@@ -34,10 +34,6 @@ A React-based web application for visualizing and analyzing Wartsila Wisa perfor
 
 ## 🌟 Live Demo
 
-Scan the QR code below to access the live application:
-
-![QR Code](https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://jmt110.github.io/wartsila_wisa)
-
 **Live URL:** [https://jmt110.github.io/wartsila_wisa](jmti10.github.io/wartsila_wisa/)
 
 ## 🚀 Features
