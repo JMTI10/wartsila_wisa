@@ -1,7 +1,7 @@
 {
   "name": "wartsila_wisa",
   "version": "0.1.0",
-  "homepage": "https://JMTI10.github.io/wartsila_wisa",
+  "homepage": "https://jmti10.github.io/wartsila_wisa",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
