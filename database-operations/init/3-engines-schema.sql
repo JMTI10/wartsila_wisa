@@ -42,6 +42,7 @@ CREATE TABLE engine_generation (
     auxiliary_power DECIMAL(12,3), -- MWh/year
     operating_hours DECIMAL(8,2), -- hours/year
     capacity_factor DECIMAL(5,2), -- percentage
+    revenue DECIMAL(15,2), -- Annual revenue in currency units
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
@@ -49,7 +50,8 @@ CREATE TABLE engine_generation (
     CONSTRAINT valid_net_generation CHECK (net_generation IS NULL OR net_generation >= 0),
     CONSTRAINT valid_auxiliary_power CHECK (auxiliary_power IS NULL OR auxiliary_power >= 0),
     CONSTRAINT valid_operating_hours CHECK (operating_hours IS NULL OR operating_hours >= 0),
-    CONSTRAINT valid_capacity_factor CHECK (capacity_factor IS NULL OR (capacity_factor >= 0 AND capacity_factor <= 100))
+    CONSTRAINT valid_capacity_factor CHECK (capacity_factor IS NULL OR (capacity_factor >= 0 AND capacity_factor <= 100)),
+    CONSTRAINT valid_revenue CHECK (revenue IS NULL OR revenue >= 0)
 );
 
 -- Stack emissions table for major greenhouse gases and pollutants
