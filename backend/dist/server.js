@@ -34,8 +34,19 @@ app.listen(port, () => {
     console.log('   GET /health - Health check');
     console.log('   GET /health/operations-db - Test operations database connection');
     console.log('   GET /health/database-health - Detailed database health check');
+    // Basic operations
     console.log('   GET /api/operations/engines - Get all engines');
-    console.log('   GET /api/operations/engines/detailed - Get engines with details');
+    console.log('   POST /api/operations/engines - Create new engine');
+    console.log('   GET /api/operations/engines/:engineId - Get engine by ID');
+    console.log('   PUT /api/operations/engines/:engineId - Update engine');
+    console.log('   DELETE /api/operations/engines/:engineId - Decommission engine');
+    // Engine analytics
+    console.log('   GET /api/operations/engines/overview/:engineId - Comprehensive engine overview');
+    // Emissions analytics
+    console.log('   GET /api/operations/engines/emissions/:engineId/daily - Daily emissions data');
+    console.log('   GET /api/operations/engines/emissions/:engineId/yearly - Yearly emissions trends');
+    console.log('   GET /api/operations/engines/emissions/:engineId/summary - Complete emissions summary');
+    // Other endpoints
     console.log('   GET /api/operations/plants - Get all plants');
     console.log('   GET /api/operations/fuel-types - Get all fuel types');
     console.log('   GET /api/operations/plants/:plantId/engines - Get engines for plant');
