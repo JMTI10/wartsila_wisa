@@ -6,9 +6,8 @@ const Engine = () => {
   const [engineData, setEngineData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentEngineId, setCurrentEngineId] = useState(1); // Default to engine 1
+  const [currentEngineId, setCurrentEngineId] = useState(1);
 
-  // Available engines
   const availableEngines = [1, 2, 3];
 
   useEffect(() => {
@@ -39,11 +38,28 @@ const Engine = () => {
     };
 
     fetchEngineData();
-  }, [currentEngineId]); // Re-fetch when engineId changes
+  }, [currentEngineId]);
 
   const handleEngineChange = (engineId) => {
     setCurrentEngineId(engineId);
   };
+
+  // Prepare chart data from daily measurements
+const prepareChartData = () => {
+  if (!engineData || !engineData.emissions_daily_data) return null;
+  
+  // Get more days - show at least 7 days if available
+  const dailyData = engineData.emissions_daily_data.slice(0, 7); // Show 7 days
+  
+  return {
+    labels: dailyData.map(item => new Date(item.date).toLocaleDateString()),
+    co2Emissions: dailyData.map(item => item.co2_emissions),
+    netGeneration: dailyData.map(item => item.net_generation),
+    co2Intensity: dailyData.map(item => item.co2_intensity)
+  };
+};
+
+  const chartData = prepareChartData();
 
   if (loading) {
     return (
@@ -292,6 +308,129 @@ const Engine = () => {
         </div>
 
       </div>
+{/* Charts Section */}
+{chartData && (
+  <div className="charts-section">
+    <h3 className="charts-title">Daily Performance Metrics</h3>
+    <div className="charts-container">
+      {/* Chart 1: CO2 Emissions vs Net Generation - FIXED BOTTOM ALIGNMENT */}
+      <div className="chart-card">
+        <h4>CO2 Emissions & Net Generation</h4>
+        <div className="chart-wrapper">
+          <div className="simple-bar-chart">
+            <div className="chart-bars-container">
+              {chartData.labels.map((label, index) => {
+                // Calculate heights based on actual values with proper scaling
+                const maxCo2 = Math.max(...chartData.co2Emissions);
+                const maxGeneration = Math.max(...chartData.netGeneration);
+                const co2Height = (chartData.co2Emissions[index] / maxCo2) * 85; // 85% of container height
+                const generationHeight = (chartData.netGeneration[index] / maxGeneration) * 85;
+                
+                return (
+                  <div key={index} className="chart-bar-group">
+                    <div className="chart-bars-wrapper">
+                      <div 
+                        className="chart-bar co2-bar" 
+                        style={{ height: `${co2Height}%` }}
+                        title={`${label}: CO2 - ${chartData.co2Emissions[index].toLocaleString()} kg`}
+                      >
+                        <span className="bar-value">
+                          {chartData.co2Emissions[index] > 1000000 
+                            ? `${(chartData.co2Emissions[index] / 1000000).toFixed(1)}M`
+                            : chartData.co2Emissions[index] > 1000 
+                              ? `${(chartData.co2Emissions[index] / 1000).toFixed(0)}K`
+                              : Math.round(chartData.co2Emissions[index])
+                          }
+                        </span>
+                      </div>
+                      <div 
+                        className="chart-bar generation-bar" 
+                        style={{ height: `${generationHeight}%` }}
+                        title={`${label}: Generation - ${chartData.netGeneration[index]} MWh`}
+                      >
+                        <span className="bar-value">{Math.round(chartData.netGeneration[index])}</span>
+                      </div>
+                    </div>
+                    <div className="chart-label">
+                      {new Date(label.split('/').reverse().join('-')).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric' 
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        <div className="chart-legend">
+          <div className="legend-item">
+            <span className="legend-color co2-color"></span>
+            <span>CO2 Emissions</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-color generation-color"></span>
+            <span>Net Generation (MWh)</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Chart 2: CO2 Intensity - FIXED BOTTOM ALIGNMENT */}
+      <div className="chart-card">
+        <h4>CO2 Intensity Trend (kg/MWh)</h4>
+        <div className="chart-wrapper">
+          <div className="co2-intensity-bars">
+            <div className="intensity-bars-container">
+              {chartData.co2Intensity.map((value, index) => {
+                const maxIntensity = Math.max(...chartData.co2Intensity);
+                const minIntensity = Math.min(...chartData.co2Intensity);
+                // Scale height from 15% to 85% for better visibility
+                const intensityHeight = 15 + ((value - minIntensity) / (maxIntensity - minIntensity)) * 70;
+                
+                return (
+                  <div key={index} className="intensity-bar-group">
+                    <div 
+                      className="intensity-bar" 
+                      style={{ height: `${intensityHeight}%` }}
+                      title={`${chartData.labels[index]}: ${value} kg/MWh`}
+                    >
+                      <span className="intensity-value">{Math.round(value)}</span>
+                    </div>
+                    <div className="intensity-label">
+                      {new Date(chartData.labels[index].split('/').reverse().join('-')).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric' 
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        
+        <div className="chart-stats">
+          <div className="stat-item">
+            <span>Min: </span>
+            <strong>{Math.min(...chartData.co2Intensity).toFixed(1)}</strong>
+          </div>
+          <div className="stat-item">
+            <span>Max: </span>
+            <strong>{Math.max(...chartData.co2Intensity).toFixed(1)}</strong>
+          </div>
+          <div className="stat-item">
+            <span>Avg: </span>
+            <strong>{(chartData.co2Intensity.reduce((a, b) => a + b, 0) / chartData.co2Intensity.length).toFixed(1)}</strong>
+          </div>
+        </div>
+        
+        <div className="intensity-scale">
+          <span>kg/MWh</span>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };
