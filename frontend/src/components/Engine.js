@@ -1,21 +1,197 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Engine.css';
 
 const Engine = () => {
+  const [engineData, setEngineData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentEngineId, setCurrentEngineId] = useState(1);
+
+  const availableEngines = [1, 2, 3];
+
+  useEffect(() => {
+    const fetchEngineData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await fetch(`http://localhost:3001/api/operations/engines/overview/${currentEngineId}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          setEngineData(data.data);
+        } else {
+          throw new Error('API returned unsuccessful response');
+        }
+      } catch (err) {
+        setError(err.message);
+        console.error('Error fetching engine data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEngineData();
+  }, [currentEngineId]);
+
+  const handleEngineChange = (engineId) => {
+    setCurrentEngineId(engineId);
+  };
+
+  // Prepare chart data from daily measurements
+const prepareChartData = () => {
+  if (!engineData || !engineData.emissions_daily_data) return null;
+  
+  // Get more days - show at least 7 days if available
+  const dailyData = engineData.emissions_daily_data.slice(0, 7); // Show 7 days
+  
+  return {
+    labels: dailyData.map(item => new Date(item.date).toLocaleDateString()),
+    co2Emissions: dailyData.map(item => item.co2_emissions),
+    netGeneration: dailyData.map(item => item.net_generation),
+    co2Intensity: dailyData.map(item => item.co2_intensity)
+  };
+};
+
+  const chartData = prepareChartData();
+
+  if (loading) {
+    return (
+      <div className="engine-page">
+        <div className="main-chart-header">
+          <div className="header-left">
+            <div className="header-brand">
+              <h1>Wartsila</h1>
+              <h2>Wisa Analytics</h2>
+            </div>
+            <p className="header-subtitle">Engine Monitoring & Performance</p>
+          </div>
+          <div className="header-right">
+            <Link to="/" className="engine-link">
+              <span className="engine-icon">←</span>
+              <span>Dashboard</span>
+            </Link>
+          </div>
+        </div>
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading engine {currentEngineId} data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="engine-page">
+        <div className="main-chart-header">
+          <div className="header-left">
+            <div className="header-brand">
+              <h1>Wartsila</h1>
+              <h2>Wisa Analytics</h2>
+            </div>
+            <p className="header-subtitle">Engine Monitoring & Performance</p>
+            <div className="engine-selector">
+              <span className="selector-label">Engine:</span>
+              {availableEngines.map(engineId => (
+                <button
+                  key={engineId}
+                  className={`engine-btn ${currentEngineId === engineId ? 'active' : ''}`}
+                  onClick={() => handleEngineChange(engineId)}
+                >
+                  Engine {engineId}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="header-right">
+            <Link to="/" className="engine-link">
+              <span className="engine-icon">←</span>
+              <span>Dashboard</span>
+            </Link>
+          </div>
+        </div>
+        <div className="error-container">
+          <h3>Error loading engine data</h3>
+          <p>{error}</p>
+          <button onClick={() => handleEngineChange(currentEngineId)} className="retry-button">
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!engineData) {
+    return (
+      <div className="engine-page">
+        <div className="main-chart-header">
+          <div className="header-left">
+            <div className="header-brand">
+              <h1>Wartsila</h1>
+              <h2>Wisa Analytics</h2>
+            </div>
+            <p className="header-subtitle">Engine Monitoring & Performance</p>
+            <div className="engine-selector">
+              <span className="selector-label">Engine:</span>
+              {availableEngines.map(engineId => (
+                <button
+                  key={engineId}
+                  className={`engine-btn ${currentEngineId === engineId ? 'active' : ''}`}
+                  onClick={() => handleEngineChange(engineId)}
+                >
+                  Engine {engineId}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="header-right">
+            <Link to="/" className="engine-link">
+              <span className="engine-icon">←</span>
+              <span>Dashboard</span>
+            </Link>
+          </div>
+        </div>
+        <div className="error-container">
+          <h3>No data available</h3>
+          <p>Unable to load engine information</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="engine-page">
-      {/* Same Header as Main Page */}
+      {/* Header with Engine Selector */}
       <div className="main-chart-header">
         <div className="header-left">
           <div className="header-brand">
             <h1>Wartsila</h1>
             <h2>Wisa Analytics</h2>
           </div>
-          <p className="header-subtitle">Engine Monitoring & Performance</p>
+          <p className="header-subtitle">
+            Engine Monitoring & Performance - {engineData.general_info.model}
+          </p>
+          <div className="engine-selector">
+            <span className="selector-label">Select Engine:</span>
+            {availableEngines.map(engineId => (
+              <button
+                key={engineId}
+                className={`engine-btn ${currentEngineId === engineId ? 'active' : ''}`}
+                onClick={() => handleEngineChange(engineId)}
+              >
+                Engine {engineId}
+              </button>
+            ))}
+          </div>
         </div>
         
-        {/* Back to Dashboard Link */}
         <div className="header-right">
           <Link to="/" className="engine-link">
             <span className="engine-icon">←</span>
@@ -29,77 +205,232 @@ const Engine = () => {
         
         {/* 1. Name ID */}
         <div className="engine-section name-id-section">
-          <h2>Name ID</h2>
+          <h2>General Information</h2>
           <div className="section-content">
             <div className="data-item">
-              <label>Engine Name:</label>
-              <span className="value">Wärtsilä 31</span>
+              <label>Engine ID:</label>
+              <span className="value">{engineData.general_info.engine_id}</span>
             </div>
             <div className="data-item">
-              <label>Engine ID:</label>
-              <span className="value">WT-31-2023-001</span>
+              <label>Plant ID:</label>
+              <span className="value">{engineData.general_info.plant_id}</span>
+            </div>
+            <div className="data-item">
+              <label>Model:</label>
+              <span className="value">{engineData.general_info.model}</span>
+            </div>
+            <div className="data-item">
+              <label>Capacity:</label>
+              <span className="value">{engineData.general_info.nameplate_capacity} MW</span>
             </div>
             <div className="data-item">
               <label>Status:</label>
-              <span className="value status-active">Active</span>
+              <span className={`value status-${engineData.general_info.status}`}>
+                {engineData.general_info.status}
+              </span>
             </div>
           </div>
         </div>
 
         {/* 2. Efficiency */}
         <div className="engine-section efficiency-section">
-          <h2>Efficiency</h2>
+          <h2>Efficiency Metrics</h2>
           <div className="section-content">
             <div className="data-item">
               <label>Heat Rate:</label>
-              <span className="value">6,850 kJ/kWh</span>
+              <span className="value">
+                {engineData.efficiency_metrics.heat_rate} {engineData.efficiency_metrics.heat_rate_unit}
+              </span>
             </div>
             <div className="data-item">
               <label>Thermal Efficiency:</label>
-              <span className="value">52.5%</span>
+              <span className="value">
+                {engineData.efficiency_metrics.thermal_efficiency} {engineData.efficiency_metrics.thermal_efficiency_unit}
+              </span>
+            </div>
+            <div className="data-item">
+              <label>Capacity Factor:</label>
+              <span className="value">
+                {engineData.efficiency_metrics.average_capacity_factor}%
+              </span>
+            </div>
+            <div className="data-item">
+              <label>Operating Hours:</label>
+              <span className="value">
+                {engineData.efficiency_metrics.total_operating_hours.toLocaleString()} hours
+              </span>
+            </div>
+            <div className="data-item">
+              <label>Total Generation:</label>
+              <span className="value">
+                {engineData.efficiency_metrics.total_net_generation.toLocaleString()} {engineData.efficiency_metrics.total_net_generation_unit}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* 3. Cost Carbon */}
+        {/* 3. Emissions Intensity */}
         <div className="engine-section cost-carbon-section">
-          <h2>Cost Carbon</h2>
+          <h2>Emissions Intensity</h2>
           <div className="section-content">
-            <div className="data-item">
-              <label>Total Cost:</label>
-              <span className="value">$12,450</span>
-            </div>
-            <div className="data-item">
-              <label>Carbon Cost:</label>
-              <span className="value">$2,180</span>
-            </div>
-          </div>
-        </div>
-
-        {/* 4. Emissions */}
-        <div className="engine-section emissions-section">
-          <h2>Emissions</h2>
-          <div className="section-content">
-            <div className="data-item">
-              <label>Carbon Emissions:</label>
-              <span className="value">245 tCO₂</span>
-            </div>
             <div className="data-item">
               <label>CO2 Intensity:</label>
-              <span className="value">420 g/kWh</span>
+              <span className="value">
+                {engineData.emissions_metrics.co2_intensity} {engineData.emissions_metrics.co2_intensity_unit}
+              </span>
             </div>
-            <div className="data-item">
-              <label>NOx RHTE:</label>
-              <span className="value">1.8 g/kWh</span>
-            </div>
+          </div>
+        </div>
+
+        {/* 4. Emission Rates */}
+        <div className="engine-section emissions-section">
+          <h2>Emission Rates</h2>
+          <div className="section-content">
             <div className="data-item">
               <label>CO2 Rate:</label>
-              <span className="value">650 kg/h</span>
+              <span className="value">
+                {engineData.emissions_metrics.emission_rates.co2_rate.toLocaleString()} {engineData.emissions_metrics.emission_rates.co2_rate_unit}
+              </span>
+            </div>
+            <div className="data-item">
+              <label>NOx Rate:</label>
+              <span className="value">
+                {engineData.emissions_metrics.emission_rates.nox_rate} {engineData.emissions_metrics.emission_rates.nox_rate_unit}
+              </span>
+            </div>
+            <div className="data-item">
+              <label>SOx Rate:</label>
+              <span className="value">
+                {engineData.emissions_metrics.emission_rates.sox_rate} {engineData.emissions_metrics.emission_rates.sox_rate_unit}
+              </span>
             </div>
           </div>
         </div>
 
       </div>
+{/* Charts Section */}
+{chartData && (
+  <div className="charts-section">
+    <h3 className="charts-title">Daily Performance Metrics</h3>
+    <div className="charts-container">
+      {/* Chart 1: CO2 Emissions vs Net Generation - FIXED BOTTOM ALIGNMENT */}
+      <div className="chart-card">
+        <h4>CO2 Emissions & Net Generation</h4>
+        <div className="chart-wrapper">
+          <div className="simple-bar-chart">
+            <div className="chart-bars-container">
+              {chartData.labels.map((label, index) => {
+                // Calculate heights based on actual values with proper scaling
+                const maxCo2 = Math.max(...chartData.co2Emissions);
+                const maxGeneration = Math.max(...chartData.netGeneration);
+                const co2Height = (chartData.co2Emissions[index] / maxCo2) * 85; // 85% of container height
+                const generationHeight = (chartData.netGeneration[index] / maxGeneration) * 85;
+                
+                return (
+                  <div key={index} className="chart-bar-group">
+                    <div className="chart-bars-wrapper">
+                      <div 
+                        className="chart-bar co2-bar" 
+                        style={{ height: `${co2Height}%` }}
+                        title={`${label}: CO2 - ${chartData.co2Emissions[index].toLocaleString()} kg`}
+                      >
+                        <span className="bar-value">
+                          {chartData.co2Emissions[index] > 1000000 
+                            ? `${(chartData.co2Emissions[index] / 1000000).toFixed(1)}M`
+                            : chartData.co2Emissions[index] > 1000 
+                              ? `${(chartData.co2Emissions[index] / 1000).toFixed(0)}K`
+                              : Math.round(chartData.co2Emissions[index])
+                          }
+                        </span>
+                      </div>
+                      <div 
+                        className="chart-bar generation-bar" 
+                        style={{ height: `${generationHeight}%` }}
+                        title={`${label}: Generation - ${chartData.netGeneration[index]} MWh`}
+                      >
+                        <span className="bar-value">{Math.round(chartData.netGeneration[index])}</span>
+                      </div>
+                    </div>
+                    <div className="chart-label">
+                      {new Date(label.split('/').reverse().join('-')).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric' 
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        <div className="chart-legend">
+          <div className="legend-item">
+            <span className="legend-color co2-color"></span>
+            <span>CO2 Emissions</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-color generation-color"></span>
+            <span>Net Generation (MWh)</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Chart 2: CO2 Intensity - FIXED BOTTOM ALIGNMENT */}
+      <div className="chart-card">
+        <h4>CO2 Intensity Trend (kg/MWh)</h4>
+        <div className="chart-wrapper">
+          <div className="co2-intensity-bars">
+            <div className="intensity-bars-container">
+              {chartData.co2Intensity.map((value, index) => {
+                const maxIntensity = Math.max(...chartData.co2Intensity);
+                const minIntensity = Math.min(...chartData.co2Intensity);
+                // Scale height from 15% to 85% for better visibility
+                const intensityHeight = 15 + ((value - minIntensity) / (maxIntensity - minIntensity)) * 70;
+                
+                return (
+                  <div key={index} className="intensity-bar-group">
+                    <div 
+                      className="intensity-bar" 
+                      style={{ height: `${intensityHeight}%` }}
+                      title={`${chartData.labels[index]}: ${value} kg/MWh`}
+                    >
+                      <span className="intensity-value">{Math.round(value)}</span>
+                    </div>
+                    <div className="intensity-label">
+                      {new Date(chartData.labels[index].split('/').reverse().join('-')).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric' 
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        
+        <div className="chart-stats">
+          <div className="stat-item">
+            <span>Min: </span>
+            <strong>{Math.min(...chartData.co2Intensity).toFixed(1)}</strong>
+          </div>
+          <div className="stat-item">
+            <span>Max: </span>
+            <strong>{Math.max(...chartData.co2Intensity).toFixed(1)}</strong>
+          </div>
+          <div className="stat-item">
+            <span>Avg: </span>
+            <strong>{(chartData.co2Intensity.reduce((a, b) => a + b, 0) / chartData.co2Intensity.length).toFixed(1)}</strong>
+          </div>
+        </div>
+        
+        <div className="intensity-scale">
+          <span>kg/MWh</span>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };
