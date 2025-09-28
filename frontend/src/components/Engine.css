@@ -7,7 +7,7 @@
 .main-chart-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: 20px;
   background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
   color: white;
@@ -42,6 +42,7 @@
   font-size: 1rem;
   opacity: 0.8;
   margin: 0;
+  margin-bottom: 10px;
 }
 
 .header-right {
@@ -74,6 +75,51 @@
 
 .engine-icon {
   font-size: 16px;
+}
+
+/* Engine Selector Styles */
+.engine-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.selector-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.engine-btn {
+  padding: 6px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.engine-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.engine-btn.active {
+  background: #e67e22;
+  border-color: #f39c12;
+  box-shadow: 0 2px 8px rgba(230, 126, 34, 0.4);
+}
+
+.engine-btn.active:hover {
+  background: #d35400;
+  border-color: #e67e22;
 }
 
 /* Main Container Grid */
@@ -135,14 +181,35 @@
   font-weight: 700;
   color: #2c3e50;
   font-size: 16px;
+  text-align: right;
 }
 
+/* Status indicators */
 .status-active {
   color: #27ae60 !important;
   background: #d5f4e6;
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 12px !important;
+  border: 1px solid #27ae60;
+}
+
+.status-inactive {
+  color: #e74c3c !important;
+  background: #fadbd8;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px !important;
+  border: 1px solid #e74c3c;
+}
+
+.status-maintenance {
+  color: #f39c12 !important;
+  background: #fef5e7;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px !important;
+  border: 1px solid #f39c12;
 }
 
 /* Specific section styling */
@@ -162,13 +229,104 @@
   background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
 }
 
+/* Loading and Error States */
+.loading-container, .error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  text-align: center;
+  padding: 40px;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-container p {
+  color: #7f8c8d;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.error-container {
+  background: #fef5f5;
+  border: 1px solid #fadbd8;
+  border-radius: 10px;
+  margin: 20px;
+}
+
+.error-container h3 {
+  color: #e74c3c;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.error-container p {
+  color: #7f8c8d;
+  margin-bottom: 25px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.retry-button {
+  padding: 12px 24px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  background: #2980b9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+/* Data value formatting for numbers */
+.value.number {
+  font-family: 'Courier New', monospace;
+  background: #f8f9fa;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+.value.unit {
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 400;
+  margin-left: 4px;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .engine-main-container {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-rows: repeat(4, auto);
     height: auto;
     min-height: 600px;
+    gap: 15px;
+  }
+  
+  .engine-section {
+    min-height: 200px;
   }
 }
 
@@ -177,6 +335,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
+    padding: 15px;
   }
   
   .header-brand {
@@ -193,6 +352,22 @@
     font-size: 1.2rem;
   }
   
+  .engine-selector {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  
+  .selector-label {
+    margin-bottom: 5px;
+  }
+  
+  .engine-btn {
+    width: 100%;
+    text-align: center;
+  }
+  
   .engine-main-container {
     padding: 15px;
     gap: 15px;
@@ -202,9 +377,112 @@
     padding: 20px;
   }
   
+  .engine-section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+  }
+  
   .data-item {
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
+    padding: 10px 0;
   }
+  
+  .data-item .value {
+    text-align: left;
+    width: 100%;
+  }
+  
+  .loading-container, .error-container {
+    height: 40vh;
+    padding: 20px;
+  }
+  
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-brand h1 {
+    font-size: 1.8rem;
+  }
+  
+  .header-brand h2 {
+    font-size: 1.1rem;
+  }
+  
+  .header-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .engine-link {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .engine-selector {
+    margin-top: 8px;
+  }
+  
+  .engine-btn {
+    padding: 5px 12px;
+    font-size: 11px;
+  }
+  
+  .engine-section {
+    padding: 15px;
+  }
+  
+  .section-content {
+    gap: 10px;
+  }
+  
+  .data-item label {
+    font-size: 13px;
+  }
+  
+  .data-item .value {
+    font-size: 14px;
+  }
+  
+  .loading-container p, .error-container p {
+    font-size: 14px;
+  }
+  
+  .retry-button {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+/* Additional utility classes */
+.data-highlight {
+  background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.data-warning {
+  color: #e67e22;
+  font-weight: 600;
+}
+
+.data-critical {
+  color: #e74c3c;
+  font-weight: 700;
+}
+
+/* Smooth transitions for section content */
+.section-content {
+  transition: all 0.3s ease;
+}
+
+.engine-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
