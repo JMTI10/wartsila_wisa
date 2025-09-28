@@ -31,7 +31,7 @@ router.get('/:plantId', async (req, res) => {
     try {
         const operationsDb = req.app.locals.operationsDb;
         // First verify plant exists in database and get plant_id
-        const plantResult = await operationsDb.query('SELECT * FROM plants WHERE plant_id = $1', [plantId]);
+        const plantResult = await operationsDb.query('SELECT * FROM plants WHERE id = $1', [plantId]);
         if (plantResult.rows.length === 0) {
             return res.status(404).json({
                 success: false,

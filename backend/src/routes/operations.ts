@@ -1,7 +1,7 @@
 // routes/operations.ts
 import { Router } from 'express';
 import enginesRoutes from './engines/engines';
-import plantsRoutes from './operations/plants';
+import plantsRoutes from './plants/plants';
 
 const router = Router();
 
