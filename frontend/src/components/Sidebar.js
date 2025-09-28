@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 
 const Sidebar = ({ onPlantSelect, onMetricsChange }) => {
   const [selectedMetrics, setSelectedMetrics] = useState(new Set());
   const [expandedCategories, setExpandedCategories] = useState(new Set());
   const [activePlant, setActivePlant] = useState(1);
-  const [plantsExpanded, setPlantsExpanded] = useState(true); // Start expanded
+  const [plantsExpanded, setPlantsExpanded] = useState(true);
+  const [apiData, setApiData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Plant data for navigation
   const plants = [
@@ -13,6 +16,49 @@ const Sidebar = ({ onPlantSelect, onMetricsChange }) => {
     { id: 2, plant_id: "PP-002", plant_name: "Mountain View Power Plant" },
     { id: 3, plant_id: "PP-003", plant_name: "Lake Side Energy Center" }
   ];
+
+  // Function to fetch data from API
+  const fetchPlantData = async (plantId) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch(`http://localhost:3001/api/operations/engines/${plantId}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setApiData(data);
+      
+      // If you want to automatically update the available metrics based on API response
+      updateMetricCategoriesFromAPI(data);
+      
+    } catch (err) {
+      setError(`Failed to fetch data: ${err.message}`);
+      console.error('Error fetching plant data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Update metric categories based on API response
+  const updateMetricCategoriesFromAPI = (data) => {
+    if (!data) return;
+    
+    // You can dynamically update available metrics based on what's actually in the API response
+    // This is optional - you might want to keep your predefined categories
+    
+    // For example, if you want to only show metrics that have data:
+    // const availableMetrics = Object.keys(data);
+    // Update your metric categories accordingly
+  };
+
+  // Fetch data when component mounts or active plant changes
+  useEffect(() => {
+    fetchPlantData(activePlant);
+  }, [activePlant]);
 
   // Metric categories based on actual API data structure
   const metricCategories = [
@@ -108,7 +154,7 @@ const Sidebar = ({ onPlantSelect, onMetricsChange }) => {
       }
       
       if (onMetricsChange) {
-        onMetricsChange(Array.from(newSet));
+        onMetricsChange(Array.from(newSet), apiData);
       }
       
       return newSet;
@@ -147,7 +193,7 @@ const Sidebar = ({ onPlantSelect, onMetricsChange }) => {
     setSelectedMetrics(newSet);
     
     if (onMetricsChange) {
-      onMetricsChange(Array.from(newSet));
+      onMetricsChange(Array.from(newSet), apiData);
     }
   };
 
@@ -155,7 +201,7 @@ const Sidebar = ({ onPlantSelect, onMetricsChange }) => {
     setSelectedMetrics(new Set());
     
     if (onMetricsChange) {
-      onMetricsChange([]);
+      onMetricsChange([], apiData);
     }
   };
 
@@ -164,11 +210,37 @@ const Sidebar = ({ onPlantSelect, onMetricsChange }) => {
     if (onPlantSelect) {
       onPlantSelect(plantId);
     }
+    // Data will be fetched automatically due to useEffect dependency on activePlant
+  };
+
+  const refreshData = () => {
+    fetchPlantData(activePlant);
   };
 
   return (
     <div className="sidebar-component">
-      {/* Plants Navigation Section - Now Collapsible */}
+      {/* API Status Indicator */}
+      {loading && (
+        <div className="api-status loading">
+          <span>🔄</span> Loading data...
+        </div>
+      )}
+      
+      {error && (
+        <div className="api-status error">
+          <span>❌</span> {error}
+          <button className="retry-btn" onClick={refreshData}>Retry</button>
+        </div>
+      )}
+      
+      {apiData && !loading && (
+        <div className="api-status success">
+          <span>✅</span> Data loaded successfully
+          <button className="refresh-btn" onClick={refreshData}>Refresh</button>
+        </div>
+      )}
+
+      {/* Plants Navigation Section */}
       <div className="plants-navigation">
         <div 
           className="plants-header"
@@ -201,6 +273,11 @@ const Sidebar = ({ onPlantSelect, onMetricsChange }) => {
       <div className="sidebar-header">
         <h2>Plant Metrics Dashboard</h2>
         <p>Select metrics to display</p>
+        {apiData && (
+          <div className="current-plant-info">
+            <small>Currently viewing data for Plant {activePlant}</small>
+          </div>
+        )}
       </div>
       
       <div className="sidebar-controls">
@@ -272,6 +349,16 @@ const Sidebar = ({ onPlantSelect, onMetricsChange }) => {
           );
         })}
       </div>
+
+      {/* Debug section - remove in production */}
+      {apiData && process.env.NODE_ENV === 'development' && (
+        <div className="debug-section">
+          <details>
+            <summary>Debug: API Response</summary>
+            <pre>{JSON.stringify(apiData, null, 2)}</pre>
+          </details>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,3 +1,10 @@
+/* Main Chart Container */
+.main-chart {
+  padding: 20px;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
 /* Main Header Styles */
 .main-header {
   background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
@@ -57,35 +64,7 @@
   font-size: 1.2rem;
 }
 
-/* Rest of your existing MainChart CSS remains the same */
-.chart-header {
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  margin-bottom: 25px;
-}
-
-.chart-header h2 {
-  margin: 0 0 10px 0;
-  color: #2c3e50;
-  font-size: 1.8rem;
-}
-
-.chart-subtitle {
-  display: flex;
-  gap: 30px;
-  color: #6c757d;
-  font-size: 0.9rem;
-}
-
-/* ... rest of your existing CSS ... */
-.main-chart {
-  padding: 20px;
-  background: #f8f9fa;
-  min-height: 100vh;
-}
-
+/* Loading and Error States */
 .chart-loading, .chart-error {
   display: flex;
   flex-direction: column;
@@ -93,6 +72,19 @@
   justify-content: center;
   height: 400px;
   color: #6c757d;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin: 25px 0;
+}
+
+.chart-loading {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.chart-error {
+  background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+  color: #c53030;
 }
 
 .spinner {
@@ -110,6 +102,7 @@
   100% { transform: rotate(360deg); }
 }
 
+/* Chart Header */
 .chart-header {
   background: white;
   padding: 25px;
@@ -122,6 +115,7 @@
   margin: 0 0 10px 0;
   color: #2c3e50;
   font-size: 1.8rem;
+  font-weight: 600;
 }
 
 .chart-subtitle {
@@ -129,8 +123,46 @@
   gap: 30px;
   color: #6c757d;
   font-size: 0.9rem;
+  flex-wrap: wrap;
 }
 
+.chart-subtitle span {
+  font-weight: 500;
+}
+
+/* Message Containers */
+.no-metrics-message, .no-charts-message {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  font-size: 1.1rem;
+  margin: 25px 0;
+  font-weight: 500;
+}
+
+.no-metrics-message {
+  background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
+  border: 2px solid #3498db;
+  color: #2c3e50;
+}
+
+.no-metrics-message p {
+  margin: 0;
+}
+
+.no-charts-message {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffeaa7 100%);
+  border: 2px solid #f39c12;
+  color: #8b4513;
+}
+
+.no-charts-message p {
+  margin: 0;
+}
+
+/* Charts Grid Layout */
 .charts-grid {
   display: flex;
   flex-direction: column;
@@ -148,6 +180,12 @@
   padding: 25px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chart-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
 .chart-container h3 {
@@ -155,6 +193,8 @@
   color: #2c3e50;
   font-size: 1.2rem;
   font-weight: 600;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 10px;
 }
 
 /* Horizontal Bar Chart */
@@ -175,6 +215,7 @@
   font-size: 0.9rem;
   color: #495057;
   font-weight: 500;
+  text-align: left;
 }
 
 .bar-track {
@@ -195,6 +236,7 @@
   padding: 0 10px;
   transition: width 0.3s ease;
   min-width: 80px;
+  position: relative;
 }
 
 .bar-value {
@@ -252,27 +294,121 @@
   padding: 10px 0;
   writing-mode: vertical-lr;
   text-orientation: mixed;
+  animation: fillUp 1s ease-out;
 }
 
 .bar-item.vertical .bar-label {
   width: 100%;
   text-align: center;
   font-size: 0.8rem;
+  order: 2;
 }
 
 .bar-item.vertical .bar-value {
   writing-mode: horizontal-tb;
 }
 
+@keyframes fillUp {
+  from {
+    height: 0%;
+  }
+  to {
+    height: var(--fill-height);
+  }
+}
+
+/* Debug Section Styles (Development Only) */
+.debug-section {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 20px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.debug-section strong {
+  color: #495057;
+  font-size: 14px;
+}
+
+.debug-section div {
+  margin: 5px 0;
+  color: #6c757d;
+}
+
+.debug-section details {
+  margin-top: 10px;
+}
+
+.debug-section summary {
+  cursor: pointer;
+  color: #007bff;
+  font-weight: bold;
+  padding: 5px 0;
+  transition: color 0.3s ease;
+}
+
+.debug-section summary:hover {
+  color: #0056b3;
+}
+
+.debug-section pre {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 10px 0;
+  overflow-x: auto;
+  max-height: 300px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 11px;
+}
+
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .chart-row {
     grid-template-columns: 1fr;
   }
   
+  .header-content {
+    padding: 15px 20px;
+  }
+  
+  .header-left h1 {
+    font-size: 1.5rem;
+  }
+  
+  .engine-button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-chart {
+    padding: 15px;
+  }
+  
+  .chart-header {
+    padding: 20px;
+  }
+  
+  .chart-header h2 {
+    font-size: 1.5rem;
+  }
+  
   .chart-subtitle {
     flex-direction: column;
-    gap: 5px;
+    gap: 8px;
+  }
+  
+  .chart-container {
+    padding: 20px;
   }
   
   .bar-item {
@@ -288,14 +424,58 @@
   .bar-chart.vertical {
     flex-direction: column;
     height: auto;
+    gap: 15px;
   }
   
   .bar-item.vertical {
     flex-direction: row;
-    height: auto;
+    height: 40px;
   }
   
   .bar-item.vertical .bar-track {
-    height: 150px;
+    height: 100%;
+  }
+  
+  .bar-item.vertical .bar-fill {
+    writing-mode: horizontal-tb;
+    text-orientation: initial;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .no-metrics-message, .no-charts-message {
+    padding: 25px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-chart {
+    padding: 10px;
+  }
+  
+  .chart-header {
+    padding: 15px;
+  }
+  
+  .chart-container {
+    padding: 15px;
+  }
+  
+  .engine-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .bar-label {
+    font-size: 0.8rem;
+  }
+  
+  .bar-value {
+    font-size: 0.7rem;
   }
 }
