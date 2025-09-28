@@ -26,7 +26,12 @@ npm run build
 ### Full System Deployment
 
 ```bash
-docker-compose up
+docker-compose up --build
+```
+##In case of rstart of the database run the follwing commands
+```bash
+docker-compose down -v --rmi all
+docker-compose up --build
 ```
 
 **Services:**
