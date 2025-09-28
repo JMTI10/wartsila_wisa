@@ -1,16 +1,94 @@
 .sidebar-component {
   width: 380px;
-  background: linear-gradient(180deg, #2c3e50 0%, #3498db 100%); /* Match header gradient */
-  border-left: 1px solid #34495e; /* Darker border to match header */
+  background: linear-gradient(180deg, #2c3e50 0%, #3498db 100%);
+  border-left: 1px solid #34495e;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
   color: white;
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  right: 0;
+  top: 0;
 }
 
-.sidebar-header {
-  padding: 20px 25px 44px;
-  background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); /* Exact header match */
+/* Plants Navigation Section */
+.plants-navigation {
+  padding: 20px 25px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid #34495e;
+  backdrop-filter: blur(10px);
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.plants-header h3 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 600;
   color: white;
-  border-bottom: 1px solid #34495e; /* Match header border */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.plants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.plant-item {
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.plant-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.plant-item.active {
+  background: rgba(52, 152, 219, 0.3);
+  border-color: #3498db;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+.plant-id {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f39c12;
+  margin-bottom: 2px;
+}
+
+.plant-name {
+  display: block;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.plant-item.active .plant-id {
+  color: #f1c40f;
+}
+
+.plant-item.active .plant-name {
+  color: white;
+  font-weight: 600;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  padding: 20px 25px;
+  background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+  color: white;
+  border-bottom: 1px solid #34495e;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .sidebar-header h2 {
@@ -27,11 +105,13 @@
   color: white;
 }
 
+/* Sidebar Controls */
 .sidebar-controls {
   padding: 20px 25px;
-  background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
-  border-bottom: 1px solid #34495e; /* Match header border */
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #34495e;
   backdrop-filter: blur(10px);
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .controls-row {
@@ -100,15 +180,15 @@
   font-weight: 500;
 }
 
+/* Sidebar Content with Independent Scroll */
 .sidebar-content {
-  padding: 0;
-  height: calc(100vh - 180px);
-  overflow-y: auto;
-  background: linear-gradient(180deg, #2c3e50 0%, #3498db 100%); /* Match sidebar gradient */
+  flex: 1; /* Take remaining space */
+  overflow-y: auto; /* Independent scrolling */
+  background: linear-gradient(180deg, #2c3e50 0%, #3498db 100%);
 }
 
 .metric-category {
-  border-bottom: 1px solid #34495e; /* Darker border */
+  border-bottom: 1px solid #34495e;
 }
 
 .metric-category:last-child {
@@ -148,7 +228,7 @@
 
 .category-stats {
   font-size: 12px;
-  color: #f39c12; /* Orange for contrast */
+  color: #f39c12;
   font-weight: 500;
   margin-left: auto;
   padding-left: 10px;
@@ -209,7 +289,7 @@
 }
 
 .metric-checkbox.checked .checkmark {
-  background: #f39c12; /* Orange */
+  background: #f39c12;
   border-color: #f39c12;
 }
 
@@ -242,28 +322,7 @@
   font-weight: 600;
 }
 
-/* Subcategory header styling */
-.metric-checkbox.subcategory-header {
-  background: rgba(255, 255, 255, 0.1);
-  border-left: 4px solid #f39c12; /* Orange accent */
-  cursor: default;
-}
-
-.metric-checkbox.subcategory-header:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.metric-checkbox.subcategory-header .metric-label {
-  font-weight: 700;
-  color: white;
-  text-transform: uppercase;
-}
-
-.metric-checkbox.subcategory-header .checkmark {
-  visibility: hidden;
-}
-
-/* Scrollbar */
+/* Scrollbar Styling */
 .sidebar-content::-webkit-scrollbar {
   width: 6px;
 }
@@ -285,12 +344,10 @@
   .sidebar-component {
     width: 100%;
     border-left: none;
-    border-top: 3px solid #f39c12; /* Orange accent */
-  }
-  
-  .sidebar-content {
+    border-top: 3px solid #f39c12;
+    position: relative;
     height: auto;
-    max-height: 400px;
+    max-height: 80vh;
   }
   
   .controls-row {
@@ -301,4 +358,113 @@
     margin-left: 0;
     text-align: center;
   }
+  
+  .plants-list {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+  
+  .plant-item {
+    min-width: 200px;
+  }
+
+  /* Plants Navigation Section - Collapsible */
+  .plants-navigation {
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid #34495e;
+    backdrop-filter: blur(10px);
+  }
+
+  .plants-header {
+    padding: 20px 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+  }
+
+  .plants-header:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-left-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .plants-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .plants-icon {
+    font-size: 1.1rem;
+  }
+
+  .plants-collapse-icon {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    transition: transform 0.3s ease;
+    margin-left: auto;
+  }
+
+  .plants-collapse-icon.expanded {
+    transform: rotate(180deg);
+  }
+
+  .plants-list {
+    padding: 0 25px 20px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Rest of your existing CSS remains the same */
+  .plant-item {
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .plant-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .plant-item.active {
+    background: rgba(52, 152, 219, 0.3);
+    border-color: #3498db;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+  }
+
+  .plant-id {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #f39c12;
+    margin-bottom: 2px;
+  }
+
+  .plant-name {
+    display: block;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+  }
+
+  .plant-item.active .plant-id {
+    color: #f1c40f;
+  }
+
+  .plant-item.active .plant-name {
+    color: white;
+    font-weight: 600;
+  }
+
+/* ... rest of your existing CSS ... */
 }

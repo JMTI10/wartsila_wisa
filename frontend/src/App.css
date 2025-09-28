@@ -22,10 +22,51 @@ body {
   flex-direction: row-reverse; /* This moves sidebar to the right */
 }
 
+/* Main content area - adjusts based on sidebar visibility */
 .main-content {
   flex: 1;
-  min-width: 0;
-  overflow-x: auto;
+  padding: 20px;
+  background: #f8f9fa;
+  min-height: 100vh;
+  transition: all 0.3s ease;
 }
 
-/* If your old sidebar has specific styles, they should work with this layout */
+/* When sidebar is visible */
+.main-content.with-sidebar {
+  width: calc(100% - 380px);
+  margin-right: 380px;
+}
+
+/* When sidebar is hidden (full width) */
+.main-content.full-width {
+  width: 100%;
+  margin-right: 0;
+}
+
+/* Remove duplicate styles and keep it clean */
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Ensure proper spacing for main content */
+.main-content > * {
+  width: 100%;
+}
+
+/* Add to your App.css */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.main-chart {
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.data-display {
+  background: #f8f9fa;
+  border-radius: 10px;
+}
