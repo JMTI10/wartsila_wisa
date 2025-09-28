@@ -210,7 +210,7 @@ const MainChart = ({ selectedMetrics = [] }) => {
       <div className="main-header">
         <div className="header-content">
           <div className="header-left">
-            <h1>Wärtsilä WISA</h1>
+            <h1>K+||-</h1>
             <p>Plant Performance Dashboard</p>
           </div>
           <div className="header-right">
