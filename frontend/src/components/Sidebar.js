@@ -1,77 +1,99 @@
 import React, { useState } from 'react';
 import './Sidebar.css';
 
-const Sidebar = () => {
+const Sidebar = ({ onPlantSelect, onMetricsChange }) => {
   const [selectedMetrics, setSelectedMetrics] = useState(new Set());
-  const [expandedCategories, setExpandedCategories] = useState(new Set([0, 1, 2, 3, 4])); // Start with all expanded
+  const [expandedCategories, setExpandedCategories] = useState(new Set());
+  const [activePlant, setActivePlant] = useState(1);
+  const [plantsExpanded, setPlantsExpanded] = useState(true); // Start expanded
 
+  // Plant data for navigation
+  const plants = [
+    { id: 1, plant_id: "PP-001", plant_name: "Riverside Coal Power Station" },
+    { id: 2, plant_id: "PP-002", plant_name: "Mountain View Power Plant" },
+    { id: 3, plant_id: "PP-003", plant_name: "Lake Side Energy Center" }
+  ];
+
+  // Metric categories based on actual API data structure
   const metricCategories = [
     {
-      title: "Carbon Intensity & Absolute Emissions",
-      icon: "📈",
+      title: "Plant & Engine Overview",
+      icon: "🏭",
       metrics: [
-        "Carbon intensity of electricity generation (kg CO2/MWh)",
-        "Scope 1 - Direct emissions",
-        "Scope 2 - Electricity emissions", 
-        "Scope 3 - Value chain emissions",
-        "Coal emissions",
-        "Natural gas emissions",
-        "Oil emissions",
-        "Renewable sources emissions"
+        "Plant ID",
+        "Plant Name",
+        "Total Engines Count",
+        "Active Engines Count",
+        "Engines in Maintenance",
+        "Total Nameplate Capacity (MW)",
+        "Engine Models",
+        "Engine Status"
       ]
     },
     {
-      title: "Greenhouse Gas & Air Pollutants",
+      title: "Energy Production Metrics",
+      icon: "⚡",
+      metrics: [
+        "Total Gross Generation (MWh)",
+        "Total Net Generation (MWh)",
+        "Total Auxiliary Power (MWh)",
+        "Total Operating Hours",
+        "Average Capacity Factor (%)",
+        "Measurement Period"
+      ]
+    },
+    {
+      title: "Carbon Emissions",
       icon: "🌫️",
       metrics: [
-        "CO2 emissions",
-        "CH4 (Methane) emissions", 
-        "N2O (Nitrous Oxide) emissions",
-        "CO2 equivalent total",
-        "NOx (Nitrogen Oxides)",
-        "SOx (Sulfur Oxides)",
-        "Particulate matter (PM)"
+        "Total CO2 Emissions (tons)",
+        "CO2 Equivalent Total (tons)",
+        "Carbon Emissions Measurement Period"
       ]
     },
     {
-      title: "Emissions Intensity Metrics",
-      icon: "⚖️",
+      title: "Other Emissions & Pollutants",
+      icon: "⚠️",
       metrics: [
-        "Carbon intensity of electricity generation",
-        "Emissions per unit of revenue (tCO2e/$)",
-        "Emissions per unit of production (tCO2e/unit)",
-        "Coal emission factor (kg CO2/unit)",
-        "Natural gas emission factor", 
-        "Oil emission factor",
-        "Renewable source emission factor"
+        "Total NOx Emissions (tons)",
+        "Total SOx Emissions (tons)",
+        "Total PM10 Emissions (kg)",
+        "Total PM2.5 Emissions (kg)",
+        "Total Heavy Metals (kg)",
+        "Total Mercury (kg)",
+        "Total VOCs (kg)",
+        "Emissions Measurement Period"
       ]
     },
     {
-      title: "Emissions Performance Indicators",
-      icon: "🎯",
+      title: "Operating & Financial Metrics",
+      icon: "💰",
       metrics: [
-        "Year-over-year emissions reduction",
-        "Emissions avoided through efficiency",
-        "Carbon footprint per customer",
-        "Grid emission factors - Regional",
-        "Grid emission factors - Seasonal",
-        "Peak vs off-peak emission factors"
+        "Total Fuel Cost ($)",
+        "Cost per MWh Produced ($/MWh)",
+        "Operating Summary Measurement Period"
       ]
     },
     {
-      title: "Operational Sustainability Metrics",
-      icon: "🌱",
+      title: "Allowances & Compliance",
+      icon: "📊",
       metrics: [
-        "Resource Efficiency",
-        "Energy return on energy invested (EROI)",
-        "Fuel utilization efficiency by technology type",
-        "Seasonal efficiency variations",
-        "Load factor optimization",
-        "Environmental Impact Indicators",
-        "Air emissions per unit of useful energy",
-        "Pollutant intensity vs regulatory limits",
-        "Environmental compliance rates",
-        "Avoided emissions from renewable generation"
+        "Allocation Year",
+        "Total Allowances Available",
+        "Estimated CO2 Emissions",
+        "Allowances Needed",
+        "Allowances Surplus"
+      ]
+    },
+    {
+      title: "Data Completeness",
+      icon: "✅",
+      metrics: [
+        "Engines Data Available",
+        "Emissions Data Available",
+        "Fuel Consumption Data Available",
+        "Generation Data Available",
+        "Allowances Data Available"
       ]
     }
   ];
@@ -84,6 +106,11 @@ const Sidebar = () => {
       } else {
         newSet.add(metric);
       }
+      
+      if (onMetricsChange) {
+        onMetricsChange(Array.from(newSet));
+      }
+      
       return newSet;
     });
   };
@@ -100,58 +127,102 @@ const Sidebar = () => {
     });
   };
 
+  const togglePlantsSection = () => {
+    setPlantsExpanded(prev => !prev);
+  };
+
   const expandAll = () => {
     setExpandedCategories(new Set(metricCategories.map((_, index) => index)));
+    setPlantsExpanded(true);
   };
 
   const collapseAll = () => {
     setExpandedCategories(new Set());
+    setPlantsExpanded(false);
   };
 
   const selectAll = () => {
     const allMetrics = metricCategories.flatMap(category => category.metrics);
-    setSelectedMetrics(new Set(allMetrics));
+    const newSet = new Set(allMetrics);
+    setSelectedMetrics(newSet);
+    
+    if (onMetricsChange) {
+      onMetricsChange(Array.from(newSet));
+    }
   };
 
   const clearAll = () => {
     setSelectedMetrics(new Set());
+    
+    if (onMetricsChange) {
+      onMetricsChange([]);
+    }
   };
 
-  const isSubcategoryHeader = (metric) => {
-    const subcategoryHeaders = [
-      "Resource Efficiency",
-      "Environmental Impact Indicators"
-    ];
-    return subcategoryHeaders.includes(metric);
+  const handlePlantSelect = (plantId) => {
+    setActivePlant(plantId);
+    if (onPlantSelect) {
+      onPlantSelect(plantId);
+    }
   };
 
   return (
     <div className="sidebar-component">
+      {/* Plants Navigation Section - Now Collapsible */}
+      <div className="plants-navigation">
+        <div 
+          className="plants-header"
+          onClick={togglePlantsSection}
+        >
+          <h3>
+            <span className="plants-icon">🏭</span>
+            Power Plants
+            <span className={`plants-collapse-icon ${plantsExpanded ? 'expanded' : ''}`}>
+              ▼
+            </span>
+          </h3>
+        </div>
+        {plantsExpanded && (
+          <div className="plants-list">
+            {plants.map(plant => (
+              <div 
+                key={plant.id}
+                className={`plant-item ${activePlant === plant.id ? 'active' : ''}`}
+                onClick={() => handlePlantSelect(plant.id)}
+              >
+                <span className="plant-id">{plant.plant_id}</span>
+                <span className="plant-name">{plant.plant_name}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="sidebar-header">
-        <h2>Emissions Metrics Dashboard</h2>
+        <h2>Plant Metrics Dashboard</h2>
         <p>Select metrics to display</p>
       </div>
       
       <div className="sidebar-controls">
-          <div className="controls-row">
-              <button className="control-btn select-all" onClick={selectAll}>
-                Select All
-              </button>
-              <button className="control-btn clear-all" onClick={clearAll}>
-                Clear All
-              </button>
-            <span className="selected-count">
-                {selectedMetrics.size} metrics selected
-            </span>
-          </div>
-      <div className="controls-row">
+        <div className="controls-row">
+          <button className="control-btn select-all" onClick={selectAll}>
+            Select All
+          </button>
+          <button className="control-btn clear-all" onClick={clearAll}>
+            Clear All
+          </button>
+          <span className="selected-count">
+            {selectedMetrics.size} metrics selected
+          </span>
+        </div>
+        <div className="controls-row">
           <button className="control-btn expand-all" onClick={expandAll}>
             Expand All
           </button>
           <button className="control-btn collapse-all" onClick={collapseAll}>
             Collapse All
           </button>
-      </div>
+        </div>
       </div>
       
       <div className="sidebar-content">
@@ -183,16 +254,13 @@ const Sidebar = () => {
                   {categoryMetrics.map((metric, metricIndex) => (
                     <label 
                       key={metricIndex} 
-                      className={`metric-checkbox ${selectedMetrics.has(metric) ? 'checked' : ''} ${
-                        isSubcategoryHeader(metric) ? 'subcategory-header' : ''
-                      }`}
+                      className={`metric-checkbox ${selectedMetrics.has(metric) ? 'checked' : ''}`}
                     >
                       <input
                         type="checkbox"
                         checked={selectedMetrics.has(metric)}
-                        onChange={() => !isSubcategoryHeader(metric) && toggleMetric(metric)}
+                        onChange={() => toggleMetric(metric)}
                         className="metric-input"
-                        disabled={isSubcategoryHeader(metric)}
                       />
                       <span className="checkmark"></span>
                       <span className="metric-label">{metric}</span>
