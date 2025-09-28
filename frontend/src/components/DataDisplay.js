@@ -1,351 +1,187 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import './Engine.css';
+import React from 'react';
+import './DataDisplay.css';
 
-const Engine = () => {
-  const [engineData, setEngineData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [currentEngineId, setCurrentEngineId] = useState(1);
-  const availableEngines = [1, 2, 3];
+const DataDisplay = ({ plantData, selectedMetrics = [] }) => {
+  // Handle loading state
+  if (plantData?.loading || !plantData) {
+    return (
+      <div className="data-display">
+        <div className="no-data">
+          <p>Loading plant data...</p>
+        </div>
+      </div>
+    );
+  }
 
-  // Fetch engine data from the specified API endpoint
-  const fetchEngineData = useCallback(async () => {
+  // Handle error state
+  if (plantData?.error) {
+    return (
+      <div className="data-display">
+        <div className="no-data">
+          <p>Error: {plantData.error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle no selected metrics
+  if (selectedMetrics.length === 0) {
+    return (
+      <div className="data-display">
+        <div className="no-metrics">
+          <p>Select metrics from the sidebar to display data</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Helper function to get metric values with proper formatting
+  const getMetricValue = (metricName) => {
     try {
-      setLoading(true);
-      setError(null);
+      const data = plantData.overview; // Access overview from plantData
+      if (!data) return "N/A";
 
-      const response = await fetch(`http://localhost:3001/api/operations/engines/${currentEngineId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          // Add any necessary headers, e.g., for authentication
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
-      }
+      // Plant & Engine Overview
+      if (metricName === "Plant ID") return data.plant_id || "N/A";
+      if (metricName === "Plant Name") return data.plant_name || "N/A";
+      if (metricName === "Total Engines Count") return data.engines?.total_count?.toLocaleString() || "N/A";
+      if (metricName === "Active Engines Count") return data.engines?.active_count?.toLocaleString() || "N/A";
+      if (metricName === "Engines in Maintenance") return data.engines?.maintenance_count?.toLocaleString() || "N/A";
+      if (metricName === "Total Nameplate Capacity (MW)") return data.engines?.total_nameplate_capacity?.toLocaleString() || "N/A";
+      if (metricName === "Engine Models") return data.engines?.engines_list?.map(engine => engine.model).join(", ") || "N/A";
+      if (metricName === "Engine Status") return data.engines?.engines_list?.map(engine => `${engine.engine_id}: ${engine.status}`).join(", ") || "N/A";
 
-      const data = await response.json();
-      
-      if (!data.success || !data.data) {
-        throw new Error(data.message || 'Invalid data received from API');
-      }
+      // Energy Production Metrics
+      if (metricName === "Total Gross Generation (MWh)") return data.energy_totals?.total_gross_generation?.toLocaleString() || "N/A";
+      if (metricName === "Total Net Generation (MWh)") return data.energy_totals?.total_net_generation?.toLocaleString() || "N/A";
+      if (metricName === "Total Auxiliary Power (MWh)") return data.energy_totals?.total_auxiliary_power?.toLocaleString() || "N/A";
+      if (metricName === "Total Operating Hours") return data.energy_totals?.total_operating_hours?.toLocaleString() || "N/A";
+      if (metricName === "Average Capacity Factor (%)") return data.energy_totals?.average_capacity_factor ? `${(data.energy_totals.average_capacity_factor * 100).toFixed(2)}%` : "N/A";
+      if (metricName === "Measurement Period") return data.energy_totals?.measurement_period || "N/A";
 
-      setEngineData(data.data);
-    } catch (err) {
-      setError(err.message);
-      console.error('Error fetching engine data:', err);
-    } finally {
-      setLoading(false);
+      // Carbon Emissions
+      if (metricName === "Total CO2 Emissions (tons)") return data.carbon_emissions?.total_co2_all_time?.toLocaleString() || "N/A";
+      if (metricName === "CO2 Equivalent Total (tons)") return data.carbon_emissions?.co2_equivalent_total?.toLocaleString() || "N/A";
+      if (metricName === "Carbon Emissions Measurement Period") return data.carbon_emissions?.measurement_period || "N/A";
+
+      // Other Emissions & Pollutants
+      if (metricName === "Total NOx Emissions (tons)") return data.other_emissions?.total_nox_all_time?.toLocaleString() || "N/A";
+      if (metricName === "Total SOx Emissions (tons)") return data.other_emissions?.total_sox_all_time?.toLocaleString() || "N/A";
+      if (metricName === "Total PM10 Emissions (kg)") return data.other_emissions?.total_pm10_all_time?.toLocaleString() || "N/A";
+      if (metricName === "Total PM2.5 Emissions (kg)") return data.other_emissions?.total_pm25_all_time?.toLocaleString() || "N/A";
+      if (metricName === "Total Heavy Metals (kg)") return data.other_emissions?.total_heavy_metals_all_time?.toLocaleString() || "N/A";
+      if (metricName === "Total Mercury (kg)") return data.other_emissions?.total_mercury_all_time?.toLocaleString() || "N/A";
+      if (metricName === "Total VOCs (kg)") return data.other_emissions?.total_vocs_all_time?.toLocaleString() || "N/A";
+      if (metricName === "Emissions Measurement Period") return data.other_emissions?.measurement_period || "N/A";
+
+      // Operating & Financial Metrics
+      if (metricName === "Total Fuel Cost ($)") return data.operating_summary?.total_all_time_fuel_cost ? `$${data.operating_summary.total_all_time_fuel_cost.toLocaleString()}` : "N/A";
+      if (metricName === "Cost per MWh Produced ($/MWh)") return data.operating_summary?.cost_per_mwh_produced ? `$${data.operating_summary.cost_per_mwh_produced.toLocaleString()}` : "N/A";
+      if (metricName === "Operating Summary Measurement Period") return data.operating_summary?.measurement_period || "N/A";
+
+      // Allowances & Compliance
+      if (metricName === "Allocation Year") return data.allowances?.allocation_year || "N/A";
+      if (metricName === "Total Allowances Available") return data.allowances?.total_allowances_available?.toLocaleString() || "N/A";
+      if (metricName === "Estimated CO2 Emissions") return data.allowances?.estimated_co2_emissions?.toLocaleString() || "N/A";
+      if (metricName === "Allowances Needed") return data.allowances?.allowances_needed?.toLocaleString() || "N/A";
+      if (metricName === "Allowances Surplus") return data.allowances?.allowances_surplus?.toLocaleString() || "N/A";
+
+      // Data Completeness
+      if (metricName === "Engines Data Available") return data.data_completeness?.engines_data ? "✅ Available" : "❌ Unavailable";
+      if (metricName === "Emissions Data Available") return data.data_completeness?.emissions_data ? "✅ Available" : "❌ Unavailable";
+      if (metricName === "Fuel Consumption Data Available") return data.data_completeness?.fuel_consumption_data ? "✅ Available" : "❌ Unavailable";
+      if (metricName === "Generation Data Available") return data.data_completeness?.generation_data ? "✅ Available" : "❌ Unavailable";
+      if (metricName === "Allowances Data Available") return data.data_completeness?.allowances_data ? "✅ Available" : "❌ Unavailable";
+
+      return "N/A";
+    } catch (error) {
+      return "Error";
     }
-  }, [currentEngineId]);
+  };
 
-  useEffect(() => {
-    fetchEngineData();
-  }, [fetchEngineData]);
-
-  const handleEngineChange = useCallback((engineId) => {
-    if (engineId !== currentEngineId) {
-      setCurrentEngineId(engineId);
+  // Get icon for each metric category
+  const getCategoryIcon = (category) => {
+    switch (category) {
+      case "Plant & Engine Overview": return "🏭";
+      case "Energy Production Metrics": return "⚡";
+      case "Carbon Emissions": return "🌫️";
+      case "Other Emissions & Pollutants": return "⚠️";
+      case "Operating & Financial Metrics": return "💰";
+      case "Allowances & Compliance": return "📊";
+      case "Data Completeness": return "✅";
+      default: return "📈";
     }
-  }, [currentEngineId]);
+  };
 
-  // Prepare chart data for the last 7 days
-  const prepareChartData = useCallback(() => {
-    if (!engineData?.emissions_daily_data?.length) return null;
-
-    const dailyData = engineData.emissions_daily_data.slice(0, 7);
-    
-    return {
-      labels: dailyData.map(item => item.date ? new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'N/A'),
-      co2Emissions: dailyData.map(item => Number(item.co2_emissions) || 0),
-      netGeneration: dailyData.map(item => Number(item.net_generation) || 0),
-      co2Intensity: dailyData.map(item => Number(item.co2_intensity) || 0)
+  // Group metrics by category for better organization
+  const groupMetricsByCategory = () => {
+    const categories = {
+      "Plant & Engine Overview": [],
+      "Energy Production Metrics": [],
+      "Carbon Emissions": [],
+      "Other Emissions & Pollutants": [],
+      "Operating & Financial Metrics": [],
+      "Allowances & Compliance": [],
+      "Data Completeness": []
     };
-  }, [engineData]);
 
-  const chartData = prepareChartData();
+    selectedMetrics.forEach(metric => {
+      if (metric.includes("Plant ID") || metric.includes("Plant Name") || metric.includes("Engines") || metric.includes("Nameplate Capacity") || metric.includes("Engine Models") || metric.includes("Engine Status")) {
+        categories["Plant & Engine Overview"].push(metric);
+      } else if (metric.includes("Generation") || metric.includes("Operating Hours") || metric.includes("Capacity Factor") || (metric.includes("Measurement Period") && !metric.includes("Emissions") && !metric.includes("Operating Summary"))) {
+        categories["Energy Production Metrics"].push(metric);
+      } else if (metric.includes("CO2") && !metric.includes("Estimated")) {
+        categories["Carbon Emissions"].push(metric);
+      } else if (metric.includes("NOx") || metric.includes("SOx") || metric.includes("PM") || metric.includes("Heavy Metals") || metric.includes("Mercury") || metric.includes("VOCs") || metric.includes("Emissions Measurement")) {
+        categories["Other Emissions & Pollutants"].push(metric);
+      } else if (metric.includes("Fuel Cost") || metric.includes("Cost per MWh") || metric.includes("Operating Summary")) {
+        categories["Operating & Financial Metrics"].push(metric);
+      } else if (metric.includes("Allocation") || metric.includes("Allowances") || metric.includes("Estimated CO2")) {
+        categories["Allowances & Compliance"].push(metric);
+      } else if (metric.includes("Data Available")) {
+        categories["Data Completeness"].push(metric);
+      }
+    });
 
-  const renderHeader = () => (
-    <div className="main-chart-header" role="banner">
-      <div className="header-left">
-        <div className="header-brand">
-          <h1>Wartsila</h1>
-          <h2>Wisa Analytics</h2>
-        </div>
-        <p className="header-subtitle">
-          Engine Monitoring & Performance {engineData ? `- ${engineData.general_info?.model || ''}` : ''}
-        </p>
-        <div className="engine-selector" role="navigation">
-          <span className="selector-label">Select Engine:</span>
-          {availableEngines.map(engineId => (
-            <button
-              key={engineId}
-              className={`engine-btn ${currentEngineId === engineId ? 'active' : ''}`}
-              onClick={() => handleEngineChange(engineId)}
-              aria-pressed={currentEngineId === engineId}
-              aria-label={`Select Engine ${engineId}`}
-            >
-              Engine {engineId}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="header-right">
-        <Link to="/" className="engine-link" aria-label="Return to Dashboard">
-          <span className="engine-icon" aria-hidden="true">←</span>
-          <span>Dashboard</span>
-        </Link>
-      </div>
-    </div>
-  );
+    return categories;
+  };
 
-  const renderLoading = () => (
-    <div className="engine-page">
-      {renderHeader()}
-      <div className="loading-container" role="alert">
-        <div className="loading-spinner" aria-hidden="true"></div>
-        <p>Loading engine {currentEngineId} data...</p>
-      </div>
-    </div>
-  );
-
-  const renderError = () => (
-    <div className="engine-page">
-      {renderHeader()}
-      <div className="error-container" role="alert">
-        <h3>Error loading engine data</h3>
-        <p>{error}</p>
-        <button 
-          onClick={() => fetchEngineData()} 
-          className="retry-button"
-          aria-label="Retry loading engine data"
-        >
-          Retry
-        </button>
-      </div>
-    </div>
-  );
-
-  const renderNoData = () => (
-    <div className="engine-page">
-      {renderHeader()}
-      <div className="error-container" role="alert">
-        <h3>No data available</h3>
-        <p>Unable to load engine information for Engine {currentEngineId}</p>
-      </div>
-    </div>
-  );
-
-  if (loading) return renderLoading();
-  if (error) return renderError();
-  if (!engineData) return renderNoData();
+  const categorizedMetrics = groupMetricsByCategory();
 
   return (
-    <div className="engine-page">
-      {renderHeader()}
-      
-      <div className="engine-main-container">
-        <section className="engine-section name-id-section" aria-labelledby="general-info-heading">
-          <h2 id="general-info-heading">General Information</h2>
-          <div className="section-content">
-            {[
-              { label: 'Engine ID', value: engineData.general_info?.engine_id },
-              { label: 'Plant ID', value: engineData.general_info?.plant_id },
-              { label: 'Model', value: engineData.general_info?.model },
-              { label: 'Capacity', value: engineData.general_info?.nameplate_capacity ? `${engineData.general_info.nameplate_capacity} MW` : 'N/A' },
-              { label: 'Status', value: engineData.general_info?.status, className: `status-${engineData.general_info?.status?.toLowerCase()}` }
-            ].map((item, index) => (
-              <div key={index} className="data-item">
-                <label>{item.label}:</label>
-                <span className={`value ${item.className || ''}`}>
-                  {item.value || 'N/A'}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="engine-section efficiency-section" aria-labelledby="efficiency-heading">
-          <h2 id="efficiency-heading">Efficiency Metrics</h2>
-          <div className="section-content">
-            {[
-              { label: 'Heat Rate', value: engineData.efficiency_metrics?.heat_rate, unit: engineData.efficiency_metrics?.heat_rate_unit },
-              { label: 'Thermal Efficiency', value: engineData.efficiency_metrics?.thermal_efficiency, unit: engineData.efficiency_metrics?.thermal_efficiency_unit },
-              { label: 'Capacity Factor', value: engineData.efficiency_metrics?.average_capacity_factor, unit: '%' },
-              { label: 'Operating Hours', value: engineData.efficiency_metrics?.total_operating_hours, unit: 'hours', format: 'toLocaleString' },
-              { label: 'Total Generation', value: engineData.efficiency_metrics?.total_net_generation, unit: engineData.efficiency_metrics?.total_net_generation_unit, format: 'toLocaleString' }
-            ].map((item, index) => (
-              <div key={index} className="data-item">
-                <label>{item.label}:</label>
-                <span className="value">
-                  {item.value != null ? 
-                    `${item.format === 'toLocaleString' ? Number(item.value).toLocaleString() : item.value} ${item.unit || ''}` : 
-                    'N/A'
-                  }
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="engine-section cost-carbon-section" aria-labelledby="emissions-intensity-heading">
-          <h2 id="emissions-intensity-heading">Emissions Intensity</h2>
-          <div className="section-content">
-            <div className="data-item">
-              <label>CO2 Intensity:</label>
-              <span className="value">
-                {engineData.emissions_metrics?.co2_intensity != null ? 
-                  `${engineData.emissions_metrics.co2_intensity} ${engineData.emissions_metrics?.co2_intensity_unit || ''}` : 
-                  'N/A'
-                }
-              </span>
-            </div>
-          </div>
-        </section>
-
-        <section className="engine-section emissions-section" aria-labelledby="emissions-rates-heading">
-          <h2 id="emissions-rates-heading">Emission Rates</h2>
-          <div className="section-content">
-            {[
-              { label: 'CO2 Rate', value: engineData.emissions_metrics?.emission_rates?.co2_rate, unit: engineData.emissions_metrics?.emission_rates?.co2_rate_unit, format: 'toLocaleString' },
-              { label: 'NOx Rate', value: engineData.emissions_metrics?.emission_rates?.nox_rate, unit: engineData.emissions_metrics?.emission_rates?.nox_rate_unit },
-              { label: 'SOx Rate', value: engineData.emissions_metrics?.emission_rates?.sox_rate, unit: engineData.emissions_metrics?.emission_rates?.sox_rate_unit }
-            ].map((item, index) => (
-              <div key={index} className="data-item">
-                <label>{item.label}:</label>
-                <span className="value">
-                  {item.value != null ? 
-                    `${item.format === 'toLocaleString' ? Number(item.value).toLocaleString() : item.value} ${item.unit || ''}` : 
-                    'N/A'
-                  }
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
+    <div className="data-display">
+      <div className="data-display-header">
+        <h2>Detailed Metrics Display</h2>
+        <span className="metrics-count">{selectedMetrics.length} metrics selected</span>
       </div>
-
-      {chartData && (
-        <section className="charts-section" aria-labelledby="charts-heading">
-          <h3 id="charts-heading">Daily Performance Metrics</h3>
-          <div className="charts-container">
-            <div className="chart-card" role="figure" aria-label="CO2 Emissions and Net Generation Chart">
-              <h4>CO2 Emissions & Net Generation</h4>
-              <div className="chart-wrapper">
-                <div className="simple-bar-chart">
-                  <div className="chart-bars-container">
-                    {chartData.labels.map((label, index) => {
-                      const maxCo2 = Math.max(...chartData.co2Emissions, 1);
-                      const maxGeneration = Math.max(...chartData.netGeneration, 1);
-                      const co2Height = (chartData.co2Emissions[index] / maxCo2) * 85;
-                      const generationHeight = (chartData.netGeneration[index] / maxGeneration) * 85;
-
-                      return (
-                        <div key={index} className="chart-bar-group">
-                          <div className="chart-bars-wrapper">
-                            <div 
-                              className="chart-bar co2-bar" 
-                              style={{ height: `${co2Height}%` }}
-                              role="img"
-                              aria-label={`CO2 Emissions on ${label}: ${chartData.co2Emissions[index].toLocaleString()} kg`}
-                            >
-                              <span className="bar-value">
-                                {chartData.co2Emissions[index] > 1000000 
-                                  ? `${(chartData.co2Emissions[index] / 1000000).toFixed(1)}M`
-                                  : chartData.co2Emissions[index] > 1000 
-                                    ? `${(chartData.co2Emissions[index] / 1000).toFixed(0)}K`
-                                    : Math.round(chartData.co2Emissions[index])
-                                }
-                              </span>
-                            </div>
-                            <div 
-                              className="chart-bar generation-bar" 
-                              style={{ height: `${generationHeight}%` }}
-                              role="img"
-                              aria-label={`Net Generation on ${label}: ${chartData.netGeneration[index].toLocaleString()} MWh`}
-                            >
-                              <span className="bar-value">{Math.round(chartData.netGeneration[index])}</span>
-                            </div>
-                          </div>
-                          <div className="chart-label">{label}</div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+      
+      <div className="metrics-container">
+        {Object.entries(categorizedMetrics).map(([category, metrics]) => (
+          metrics.length > 0 && (
+            <div key={category} className="metric-category-section">
+              <div className="category-header">
+                <span className="category-icon">{getCategoryIcon(category)}</span>
+                <h3 className="category-title">{category}</h3>
+                <span className="metrics-count">{metrics.length} metrics</span>
               </div>
-              <div className="chart-legend">
-                <div className="legend-item">
-                  <span className="legend-color co2-color" aria-hidden="true"></span>
-                  <span>CO2 Emissions (kg)</span>
-                </div>
-                <div className="legend-item">
-                  <span className="legend-color generation-color" aria-hidden="true"></span>
-                  <span>Net Generation (MWh)</span>
-                </div>
+              <div className="metrics-grid">
+                {metrics.map((metric, index) => (
+                  <div key={index} className="metric-card">
+                    <div className="metric-header">
+                      <span className="metric-name">{metric}</span>
+                    </div>
+                    <div className="metric-value-container">
+                      <span className="metric-value">{getMetricValue(metric)}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-
-            <div className="chart-card" role="figure" aria-label="CO2 Intensity Trend Chart">
-              <h4>CO2 Intensity Trend (kg/MWh)</h4>
-              <div className="chart-wrapper">
-                <div className="co2-intensity-bars">
-                  <div className="intensity-bars-container">
-                    {chartData.co2Intensity.map((value, index) => {
-                      const maxIntensity = Math.max(...chartData.co2Intensity, 1);
-                      const minIntensity = Math.min(...chartData.co2Intensity, 0);
-                      const intensityHeight = minIntensity === maxIntensity 
-                        ? 50 
-                        : 15 + ((value - minIntensity) / (maxIntensity - minIntensity)) * 70;
-
-                      return (
-                        <div key={index} className="intensity-bar-group">
-                          <div 
-                            className="intensity-bar" 
-                            style={{ height: `${intensityHeight}%` }}
-                            role="img"
-                            aria-label={`CO2 Intensity on ${chartData.labels[index]}: ${value.toFixed(1)} kg/MWh`}
-                          >
-                            <span className="intensity-value">{Math.round(value)}</span>
-                          </div>
-                          <div className="intensity-label">{chartData.labels[index]}</div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-              <div className="chart-stats">
-                <div className="stat-item">
-                  <span>Min: </span>
-                  <strong>{Math.min(...chartData.co2Intensity).toFixed(1)}</strong>
-                </div>
-                <div className="stat-item">
-                  <span>Max: </span>
-                  <strong>{Math.max(...chartData.co2Intensity).toFixed(1)}</strong>
-                </div>
-                <div className="stat-item">
-                  <span>Avg: </span>
-                  <strong>{(chartData.co2Intensity.reduce((a, b) => a + b, 0) / chartData.co2Intensity.length).toFixed(1)}</strong>
-                </div>
-              </div>
-              <div className="intensity-scale">
-                <span>kg/MWh</span>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
+          )
+        ))}
+      </div>
     </div>
   );
 };
 
-Engine.propTypes = {
-  engineId: PropTypes.number
-};
-
-export default Engine;
+export default DataDisplay;

@@ -77,8 +77,7 @@ const Engine = () => {
     <div className="main-chart-header" role="banner">
       <div className="header-left">
         <div className="header-brand">
-          <h1>Wartsila</h1>
-          <h2>Wisa Analytics</h2>
+          <h1>K+||-</h1>
         </div>
         <p className="header-subtitle">
           Engine Monitoring & Performance {engineData ? `- ${engineData.general_info?.model || ''}` : ''}
