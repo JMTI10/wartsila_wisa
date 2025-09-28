@@ -15,7 +15,9 @@ CREATE TABLE plants (
     id BIGSERIAL PRIMARY KEY,
     plant_id VARCHAR(50) NOT NULL UNIQUE,
     plant_name VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    plant_location VARCHAR(100)
+
 );
 
 -- Indexes for better performance
