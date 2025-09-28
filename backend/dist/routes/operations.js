@@ -5,21 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // routes/operations.ts
 const express_1 = require("express");
-const engines_1 = __importDefault(require("./operations/engines"));
-const overview_1 = __importDefault(require("./engines/overview"));
-const emissions_1 = __importDefault(require("./engines/emissions"));
-const overview_2 = __importDefault(require("./plants/overview"));
+const engines_1 = __importDefault(require("./engines/engines"));
 const plants_1 = __importDefault(require("./operations/plants"));
-const fuel_types_1 = __importDefault(require("./operations/fuel-types"));
-const summary_1 = __importDefault(require("./operations/summary"));
 const router = (0, express_1.Router)();
 // Mount operation-specific routes
 router.use('/operations/engines', engines_1.default);
-router.use('/operations/engines/overview', overview_1.default);
-router.use('/operations/engines/emissions', emissions_1.default);
-router.use('/operations/plants/overview', overview_2.default);
 router.use('/operations/plants', plants_1.default);
-router.use('/operations/fuel-types', fuel_types_1.default);
-router.use('/operations/summary', summary_1.default);
 exports.default = router;
 //# sourceMappingURL=operations.js.map

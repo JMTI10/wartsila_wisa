@@ -41,30 +41,12 @@ app.listen(port, () => {
   // Engine operations
   console.log('   GET /api/operations/engines - Get all engines (basic info)');
   console.log('   GET /api/operations/engines/detailed - Get engines with detailed information');
-  console.log('   POST /api/operations/engines - Create new engine');
-  console.log('   GET /api/operations/engines/:engineId - Get engine by ID');
-  console.log('   PUT /api/operations/engines/:engineId - Update engine');
-  console.log('   DELETE /api/operations/engines/:engineId - Decommission engine');
-
-  // Engine analytics & overview
-  console.log('   GET /api/operations/engines/overview/:engineId - Comprehensive engine overview');
+  console.log('   GET /api/operations/engines/:engineId - Get comprehensive engine overview');
 
   // Plant operations
   console.log('   GET /api/operations/plants - Get all plants');
-  console.log('   POST /api/operations/plants - Create new plant');
-  console.log('   GET /api/operations/plants/:plantId - Get plant by ID');
-  console.log('   PUT /api/operations/plants/:plantId - Update plant');
+  console.log('   GET /api/operations/plants/:plantId - Get comprehensive plant overview');
   console.log('   GET /api/operations/plants/:plantId/engines - Get engines for plant');
-  console.log('   GET /api/operations/plants/:plantId/info - Get plant general information');
-
-  // Fuel type operations
-  console.log('   GET /api/operations/fuel-types - Get all fuel types');
-  console.log('   GET /api/operations/fuel-types/:fuelCode - Get fuel type by code');
-  console.log('   GET /api/operations/fuel-types/:fuelCode/engines - Get engines using fuel type');
-
-  // Summary & analytics
-  console.log('   GET /api/operations/summary - Get basic database summary');
-  console.log('   GET /api/operations/summary/detailed - Get detailed database summary');
 
   console.log('🌱 Ready for sustainability data processing!');
 });
