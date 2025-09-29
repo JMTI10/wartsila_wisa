@@ -225,20 +225,7 @@ const Sidebar = ({ onPlantSelect, onMetricsChange }) => {
           <span>🔄</span> Loading data...
         </div>
       )}
-      
-      {error && (
-        <div className="api-status error">
-          <span>❌</span> {error}
-          <button className="retry-btn" onClick={refreshData}>Retry</button>
-        </div>
-      )}
-      
-      {apiData && !loading && (
-        <div className="api-status success">
-          <span>✅</span> Data loaded successfully
-          <button className="refresh-btn" onClick={refreshData}>Refresh</button>
-        </div>
-      )}
+
 
       {/* Plants Navigation Section */}
       <div className="plants-navigation">
@@ -266,16 +253,6 @@ const Sidebar = ({ onPlantSelect, onMetricsChange }) => {
                 <span className="plant-name">{plant.plant_name}</span>
               </div>
             ))}
-          </div>
-        )}
-      </div>
-
-      <div className="sidebar-header">
-        <h2>Plant Metrics Dashboard</h2>
-        <p>Select metrics to display</p>
-        {apiData && (
-          <div className="current-plant-info">
-            <small>Currently viewing data for Plant {activePlant}</small>
           </div>
         )}
       </div>
@@ -349,18 +326,7 @@ const Sidebar = ({ onPlantSelect, onMetricsChange }) => {
           );
         })}
       </div>
-
-      {/* Debug section - remove in production */}
-      {apiData && process.env.NODE_ENV === 'development' && (
-        <div className="debug-section">
-          <details>
-            <summary>Debug: API Response</summary>
-            <pre>{JSON.stringify(apiData, null, 2)}</pre>
-          </details>
-        </div>
-      )}
     </div>
   );
 };
-
 export default Sidebar;

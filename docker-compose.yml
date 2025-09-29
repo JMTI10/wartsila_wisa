@@ -38,7 +38,7 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfi  le: Dockerfile
     container_name: sustainability-backend
     restart: unless-stopped
     environment:

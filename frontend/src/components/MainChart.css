@@ -1,21 +1,24 @@
 /* Main Chart Container */
 .main-chart {
-  padding: 20px;
   background: #f8f9fa;
   min-height: 100vh;
-  width: calc(100% - 340px); /* Adjusted to account for Sidebar width */
-  margin-left: 340px; /* Align with Sidebar */
-  box-sizing: border-box; /* Ensure padding doesn’t affect width */
+  width: calc(100% - 340px);
+  box-sizing: border-box;
+  gap: 20px;
 }
 
 /* Main Header Styles */
 .main-header {
   background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
   color: white;
-  padding: 0;
+  padding: 1rem 2rem;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  margin-bottom: 25px;
-  width: 100%;
+  width: calc(100% - 380px); /* Subtract sidebar width */
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
 }
 
 .header-content {
@@ -25,9 +28,9 @@
   padding: 20px 25px;
   max-width: 1200px;
   margin: 0 auto;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
-  gap: 15px; /* Add gap for better spacing */
-  box-sizing: border-box; /* Ensure padding is included in width */
+  flex-wrap: wrap;
+  gap: 15px;
+  box-sizing: border-box;
 }
 
 .header-left h1 {
@@ -85,7 +88,6 @@
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  margin: 25px auto;
   max-width: 600px;
 }
 
@@ -130,9 +132,12 @@
 }
 
 .chart-subtitle {
+  padding: 1rem 2rem;
+  z-index: 1000;
+  align-items: flex-end;
   display: flex;
-  gap: 20px;
-  color: #6c757d;
+  gap: 10px;
+  color: #050505;
   font-size: 0.85rem;
   flex-wrap: wrap;
 }
@@ -174,17 +179,22 @@
   margin: 0;
 }
 
-/* Charts Grid Layout */
 .charts-grid {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
 .chart-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 10px;
+  margin-top: 200px;
+}
+
+.chart-row-co2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 50px;
 }
 
 .chart-container {
@@ -386,7 +396,10 @@
 @media (max-width: 1024px) {
   .main-chart {
     width: calc(100% - 270px);
-    margin-left: 270px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 
   .chart-row {

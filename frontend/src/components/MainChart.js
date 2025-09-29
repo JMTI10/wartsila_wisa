@@ -200,7 +200,6 @@ const MainChart = ({ selectedMetrics = [], plantData, currentPlant }) => {
 
   return (
     <div className="main-chart">
-      {/* Blue Header with Orange Button */}
       <div className="main-header">
         <div className="header-content">
           <div className="header-left">
@@ -214,11 +213,8 @@ const MainChart = ({ selectedMetrics = [], plantData, currentPlant }) => {
             </button>
           </div>
         </div>
-      </div>
-
-      <div className="chart-header">
-        <h2>{actualPlantData.plant_name} - Overview</h2>
         <div className="chart-subtitle">
+          <h2>{actualPlantData.plant_name} - Overview</h2>
           <span>Plant ID: {actualPlantData.plant_id}</span>
           <span>Current Plant: {currentPlant}</span>
           <span>Last Updated: {actualPlantData.last_updated ? new Date(actualPlantData.last_updated).toLocaleString() : 'N/A'}</span>
@@ -247,7 +243,7 @@ const MainChart = ({ selectedMetrics = [], plantData, currentPlant }) => {
             {renderEnergyProductionChart()}
           </div>
           
-          <div className="chart-row">
+          <div className="chart-row-co2">
             {renderCarbonEmissionsChart()}
           </div>
         </div>

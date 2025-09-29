@@ -4,13 +4,15 @@
   border-left: 1px solid #34495e;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
   color: white;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
   display: flex;
   flex-direction: column;
   position: fixed;
   right: 0;
   top: 0;
+  z-index: 99; /* Lower than header */
 }
+
 
 /* API Status Indicators */
 .api-status {
