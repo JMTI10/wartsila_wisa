@@ -29,6 +29,8 @@
     "build": "react-scripts build",
     "start": "react-scripts start",
     "test": "react-scripts test",
+    "prebuild": "rm -rf dist",
+    "build": "tsc",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
